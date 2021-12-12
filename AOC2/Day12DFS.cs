@@ -37,25 +37,28 @@ namespace AOC2
                 }
                 NumberOfPaths.Add(list);
             }
+
+            Console.WriteLine(counter); counter = 0;
             Console.WriteLine("Answer:" + DFSWithMem(NumberOfPaths, new int[Caves.Count], startIndex, false));
+            Console.WriteLine(counter);
         }
 
         int counter = 0;
 
 
-        public long Convert(int[] Visted, int caveFrom, bool twice)
+        public long Convert(int[] Visited, int caveFrom, bool twice)
         {
             long acc = caveFrom;
             int i = 0;
-            for (; i < Visted.Length; i++)
+            for (; i < Visited.Length; i++)
             {
-                acc += Visted[i] << (i + 4);
+                acc += Visited[i] << (i + 4);
             }
             acc += (twice ? 1 : 0) << (i + 4);
             return acc;
         }
 
-        private int DFS(List<List<int>> NumberOfPaths, int[] Visted, int caveFrom, bool twice)
+        private int DFS(List<List<int>> NumberOfPaths, int[] Visited, int caveFrom, bool twice)
         {
             counter++;
             int count = 0;
@@ -66,25 +69,25 @@ namespace AOC2
                 {
                     count += NumberOfPaths[caveFrom][caveTo];
                 }
-                else if (Visted[caveTo] == 0)
+                else if (Visited[caveTo] == 0)
                 {
 
-                    Visted[caveTo] = 1;
-                    count += (NumberOfPaths[caveFrom][caveTo]) * DFS(NumberOfPaths, Visted, caveTo, twice);
-                    Visted[caveTo] = 0;
+                    Visited[caveTo] = 1;
+                    count += (NumberOfPaths[caveFrom][caveTo]) * DFS(NumberOfPaths, Visited, caveTo, twice);
+                    Visited[caveTo] = 0;
                 }
                 else
-                if (!twice && (Visted[caveTo] == 1))
+                if (!twice && (Visited[caveTo] == 1))
                 {
-                    count += (NumberOfPaths[caveFrom][caveTo]) * DFS(NumberOfPaths, Visted, caveTo, true);
+                    count += (NumberOfPaths[caveFrom][caveTo]) * DFS(NumberOfPaths, Visited, caveTo, true);
                 }
             }
             return count;
         }
-        private int DFSWithMem(List<List<int>> NumberOfPaths, int[] Visted, int caveFrom, bool twice)
+        private int DFSWithMem(List<List<int>> NumberOfPaths, int[] Visited, int caveFrom, bool twice)
         {
 
-            long key = Convert(Visted, caveFrom, twice);
+            long key = Convert(Visited, caveFrom, twice);
             if (Memory.ContainsKey(key)) return Memory[key];
             counter++;
             int count = 0;
@@ -95,16 +98,16 @@ namespace AOC2
                 {
                     count += NumberOfPaths[caveFrom][caveTo];
                 }
-                else if (Visted[caveTo] == 0)
+                else if (Visited[caveTo] == 0)
                 {
-                    Visted[caveTo] = 1;
-                    count += (NumberOfPaths[caveFrom][caveTo]) * DFSWithMem(NumberOfPaths, Visted, caveTo, twice);
-                    Visted[caveTo] = 0;
+                    Visited[caveTo] = 1;
+                    count += (NumberOfPaths[caveFrom][caveTo]) * DFSWithMem(NumberOfPaths, Visited, caveTo, twice);
+                    Visited[caveTo] = 0;
                 }
                 else
-                if (!twice && (Visted[caveTo] == 1))
+                if (!twice && (Visited[caveTo] == 1))
                 {
-                    count += (NumberOfPaths[caveFrom][caveTo]) * DFSWithMem(NumberOfPaths, Visted, caveTo, true);
+                    count += (NumberOfPaths[caveFrom][caveTo]) * DFSWithMem(NumberOfPaths, Visited, caveTo, true);
                 }
             }
             Memory[key] = count;
@@ -155,6 +158,7 @@ namespace AOC2
             int count = 0;
             while (q.Count > 0)
             {
+                counter++;
                 var current = q.Dequeue();
                 foreach (var next in Caves.Where(next => Edges.ContainsKey(current) && Edges[current].Contains(next) && !visted.Contains(next)))
                 {
