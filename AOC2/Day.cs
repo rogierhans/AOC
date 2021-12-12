@@ -10,16 +10,17 @@ namespace AOC2
 {
     class Day
     {
-        public string RootFolder = @"C:\Users\Rogier\source\repos\AOC\AOC2\InputFiles\";
+       public string RootFolder = @"C:\Users\Rogier\Dropbox\AOC2\AOC2\InputFiles\";
+     //   public string RootFolder = @"C:\Users\Rogier\source\repos\AOC\AOC2\InputFiles\";
         public void GetInput(string folder) {
             string name = "input.txt";
             string filename = folder + name;
             string filenameTest = folder + "test.txt";
             var testLines = File.ReadAllLines(filenameTest).ToList();
             var inputLines = File.ReadAllLines(filename).ToList();
-            //Console.WriteLine("test:");
-           // Main(testLines);
-           // Console.WriteLine("input:");
+            Console.WriteLine("test:");
+            Main(testLines);
+            Console.WriteLine("input:");
             Main(inputLines);
         }
 
