@@ -8,7 +8,7 @@ namespace AOC2
 {
     public static class SL
     {
-        public static List<R> Product<T1, T2, R>(this List<T1> list1, List<T2> list2, Func<T1,T2,R> f)
+        public static List<R> Product<T1, T2, R>(this List<T1> list1, List<T2> list2, Func<T1, T2, R> f)
         {
             List<R> newList = new List<R>();
             int length = Math.Min(list1.Count, list2.Count);
@@ -122,5 +122,64 @@ namespace AOC2
             }
         }
 
+        public static List<List<T>> SubSelect<T>(this List<List<T>> list, List<(int,int)> neighbors, Func<T, T> f)
+        {
+            var newList = list.DeepCopy();
+            foreach (var neighbor in neighbors) {
+                newList[neighbor.Item1][neighbor.Item2] = f(list[neighbor.Item1][neighbor.Item2]);
+            }
+            return newList;
+        }
+
+        public static List<(int, int)> Neighbor4<T>(this List<List<T>> list, int i, int j)
+        {
+            List<(int, int)> neighborList = new List<(int, int)>();
+            foreach (var offset in new List<(int, int)>() { (-1, 0), (1, 0), (0, -1), (0, 1) })
+            {
+                int newI = i + offset.Item1;
+                int newJ = j + offset.Item2;
+
+                bool outOfRow = newI < 0 || newI >= list.Count;
+                bool outOfColumn = newJ < 0 || newJ >= list[0].Count;
+                if (!outOfColumn && !outOfRow && !(i == newI && j == newJ))
+                {
+                    neighborList.Add((newI, newJ));
+                }
+
+            }
+            return neighborList;
+        }
+        public static List<(int, int)> Neighbor8<T>(this List<List<T>> list, int i, int j, bool includeSelf = false)
+        {
+            return (NeighborList(i, j, -1, 1, -1, 1, list.Count, list[0].Count, includeSelf ));
+        }
+
+        public static List<(int, int)> NeighborList<T>(this List<List<T>> list, int i, int j, int minI, int maxI, int minJ, int maxJ, bool includeSelf = true)
+        {
+            return (NeighborList(i, j, minI, maxI, minJ, maxJ, list.Count, list[0].Count, includeSelf));
+        }
+
+        public static List<(int, int)> NeighborList(int i, int j, int minI, int maxI, int minJ, int maxJ, int width, int height, bool includeSelf=true)
+        {
+            List<(int, int)> neighborList = new List<(int, int)>();
+            for (int offsetI = minI; offsetI < maxI; offsetI++)
+            {
+                for (int offsetJ = minJ; offsetJ < maxJ; offsetJ++)
+                {
+                    int newI = i + offsetI;
+                    int newJ = j + offsetJ;
+
+                    bool outOfRow = newI < 0 || newI >= width;
+                    bool outOfColumn = newJ < 0 || newJ >= height;
+                    if (!outOfColumn && !outOfRow && !( !includeSelf && i == newI && j == newJ))
+                    {
+                        neighborList.Add((newI, newJ));
+                    }
+                }
+            }
+
+
+            return neighborList;
+        }
     }
 }
