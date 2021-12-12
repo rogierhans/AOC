@@ -9,7 +9,6 @@ namespace AOC2
     class Grid
     {
 
-        //public static List<(int,int)> NeighborList(int i, int j) { }
 
 
         List<List<string>> Cells = new List<List<string>>();

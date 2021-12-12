@@ -87,10 +87,10 @@
     <Compile Include="2021Days\Day9.cs" />
     <Compile Include="2018Days\Day2018_01.cs" />
     <Compile Include="2018Days\Day2018_02.cs" />
-    <Compile Include="Day12.cs" />
+    <Compile Include="2021Days\Day12.cs" />
     <Compile Include="2018Days\Day2018_03.cs" />
-    <Compile Include="Day12DFS.cs" />
-    <Compile Include="Day12BFS.cs" />
+    <Compile Include="2021Days\Day12DFS.cs" />
+    <Compile Include="2021Days\Day12BFS.cs" />
     <Compile Include="ListExtentions.cs" />
     <Compile Include="GOL.cs" />
     <Compile Include="Grid.cs" />

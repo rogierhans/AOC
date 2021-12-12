@@ -12,7 +12,7 @@ namespace AOC2
         public Day12DFS()
         {
             SL.printParse = false;
-            GetInput(RootFolder + @"2018_03\");
+            GetInput(RootFolder + @"2021_12\");
         }
         int startIndex;
         int endIndex;
