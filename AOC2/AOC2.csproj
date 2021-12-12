@@ -54,8 +54,8 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Gurobi80.NET">
-      <HintPath>..\..\C#Projects\CleanCommit\bin\Debug\Gurobi80.NET.dll</HintPath>
+    <Reference Include="Gurobi81.NET">
+      <HintPath>..\..\..\..\..\..\Program Files (x86)\Gurobi\win64\bin\Gurobi81.NET.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

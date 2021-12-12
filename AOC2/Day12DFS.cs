@@ -12,7 +12,7 @@ namespace AOC2
         public Day12DFS()
         {
             SL.printParse = false;
-            GetInput(RootFolder + @"");
+            GetInput(RootFolder + @"2018_03\");
         }
         int startIndex;
         int endIndex;
@@ -38,9 +38,7 @@ namespace AOC2
                 NumberOfPaths.Add(list);
             }
 
-            Console.WriteLine(counter); counter = 0;
             Console.WriteLine("Answer:" + DFSWithMem(NumberOfPaths, new int[Caves.Count], startIndex, false));
-            Console.WriteLine(counter);
         }
 
         int counter = 0;

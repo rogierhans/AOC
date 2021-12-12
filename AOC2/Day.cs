@@ -10,7 +10,7 @@ namespace AOC2
 {
     class Day
     {
-        public string RootFolder = @"C:\Users\Rogier\Desktop\AOC\";
+        public string RootFolder = @"C:\Users\Rogier\source\repos\AOC\AOC2\InputFiles\";
         public void GetInput(string folder) {
             string name = "input.txt";
             string filename = folder + name;
