@@ -38,9 +38,7 @@ namespace AOC2
                 NumberOfPaths.Add(list);
             }
 
-            Console.WriteLine(counter); counter = 0;
-            Console.WriteLine("Answer:" + DFSWithMem(NumberOfPaths, new int[Caves.Count], startIndex, false));
-            Console.WriteLine(counter);
+            DFSWithMem(NumberOfPaths, new int[Caves.Count], startIndex, false);
         }
 
         int counter = 0;
