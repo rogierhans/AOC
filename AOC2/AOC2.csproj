@@ -82,6 +82,9 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Gurobi80.NET">
+      <HintPath>..\..\C#Projects\CleanCommit\bin\Debug\Gurobi80.NET.dll</HintPath>
+    </Reference>
     <Reference Include="Gurobi81.NET">
       <HintPath>..\..\..\..\..\..\Program Files (x86)\Gurobi\win64\bin\Gurobi81.NET.dll</HintPath>
     </Reference>
@@ -119,6 +122,7 @@
     <Compile Include="2018Days\Day2018_03.cs" />
     <Compile Include="2021Days\Day12DFS.cs" />
     <Compile Include="2021Days\Day12BFS.cs" />
+    <Compile Include="Day13.cs" />
     <Compile Include="ListExtentions.cs" />
     <Compile Include="GOL.cs" />
     <Compile Include="Grid.cs" />

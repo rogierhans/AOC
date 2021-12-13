@@ -18,9 +18,9 @@ namespace AOC2
             string filenameTest = folder + "test.txt";
             var testLines = File.ReadAllLines(filenameTest).ToList();
             var inputLines = File.ReadAllLines(filename).ToList();
-            Console.WriteLine("test:");
+            Console.WriteLine("---###Test###---");
             Main(testLines);
-            Console.WriteLine("input:");
+            Console.WriteLine("---###Input###---");
             Main(inputLines);
         }
 

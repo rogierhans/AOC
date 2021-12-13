@@ -13,7 +13,7 @@ namespace AOC2
         [STAThreadAttribute]
         static void Main(string[] args)
         {
-            new Day2018_03();
+            new Day13();
         }
     }
 }

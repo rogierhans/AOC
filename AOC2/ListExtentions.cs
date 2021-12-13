@@ -8,6 +8,36 @@ namespace AOC2
 {
     public static class SL
     {
+
+        public static List<List<R>> ZipGrid<T, P, R>(this List<List<T>> list, List<List<P>> list2, Func<T, P, R> f)
+        {
+            return list.Zip(list2, (row1, row2) => row1.Zip(row2, (cell1, cell2) => f(cell1, cell2)).ToList()).ToList();
+        }
+        public static List<List<T>> ReverseV<T>(this List<List<T>> list)
+        {
+            var newList = new List<List<T>>();
+
+            for (int i = list.Count - 1; i >= 0; i--)
+            {
+                newList.Add(list[i]);
+            }
+
+            return newList;
+        }
+
+        public static List<List<T>> ReverseH<T>(this List<List<T>> list)
+        {
+            var newList = new List<List<T>>();
+
+            foreach (var line in list)
+            {
+                var newline = new List<T>(line);
+                line.Reverse();
+                newList.Add(newline);
+            }
+
+            return newList;
+        }
         public static List<R> Product<T1, T2, R>(this List<T1> list1, List<T2> list2, Func<T1, T2, R> f)
         {
             List<R> newList = new List<R>();
@@ -113,19 +143,20 @@ namespace AOC2
             Console.WriteLine(line);
         }
 
-        public static void Print<T>(this List<List<T>> oldList, string seperator = "")
+        public static void Print<T>(this List<List<T>> list, string seperator = "")
         {
-            foreach (var list in oldList)
+            foreach (var list in list)
             {
                 string line = string.Join(seperator, list);
                 Console.WriteLine(line);
             }
         }
 
-        public static List<List<T>> SubSelect<T>(this List<List<T>> list, List<(int,int)> neighbors, Func<T, T> f)
+        public static List<List<T>> SubSelect<T>(this List<List<T>> list, List<(int, int)> neighbors, Func<T, T> f)
         {
             var newList = list.DeepCopy();
-            foreach (var neighbor in neighbors) {
+            foreach (var neighbor in neighbors)
+            {
                 newList[neighbor.Item1][neighbor.Item2] = f(list[neighbor.Item1][neighbor.Item2]);
             }
             return newList;
@@ -151,7 +182,7 @@ namespace AOC2
         }
         public static List<(int, int)> Neighbor8<T>(this List<List<T>> list, int i, int j, bool includeSelf = false)
         {
-            return (NeighborList(i, j, -1, 1, -1, 1, list.Count, list[0].Count, includeSelf ));
+            return (NeighborList(i, j, -1, 1, -1, 1, list.Count, list[0].Count, includeSelf));
         }
 
         public static List<(int, int)> NeighborList<T>(this List<List<T>> list, int i, int j, int minI, int maxI, int minJ, int maxJ, bool includeSelf = true)
@@ -159,7 +190,7 @@ namespace AOC2
             return (NeighborList(i, j, minI, maxI, minJ, maxJ, list.Count, list[0].Count, includeSelf));
         }
 
-        public static List<(int, int)> NeighborList(int i, int j, int minI, int maxI, int minJ, int maxJ, int width, int height, bool includeSelf=true)
+        public static List<(int, int)> NeighborList(int i, int j, int minI, int maxI, int minJ, int maxJ, int width, int height, bool includeSelf = true)
         {
             List<(int, int)> neighborList = new List<(int, int)>();
             for (int offsetI = minI; offsetI < maxI; offsetI++)
@@ -171,7 +202,7 @@ namespace AOC2
 
                     bool outOfRow = newI < 0 || newI >= width;
                     bool outOfColumn = newJ < 0 || newJ >= height;
-                    if (!outOfColumn && !outOfRow && !( !includeSelf && i == newI && j == newJ))
+                    if (!outOfColumn && !outOfRow && !(!includeSelf && i == newI && j == newJ))
                     {
                         neighborList.Add((newI, newJ));
                     }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
 using System.Diagnostics;
-//using Gurobi;
+using Gurobi;
 namespace AOC2
 {
     class Day7 : Day
@@ -53,25 +53,25 @@ namespace AOC2
 
         private void GurobiBloat(List<string> Lines)
         {
-           // var env = new GRBEnv();
-           // var model = new GRBModel(env);
-            //var objective = new GRBQuadExpr();
+            var env = new GRBEnv();
+            var model = new GRBModel(env);
+            var objective = new GRBQuadExpr();
 
-           // var numbers = Lines.First().Split(',').Select(x => long.Parse(x)).ToList();
-           // objective -= numbers.Count();
-           // var bestPosition = model.AddVar(numbers.Min(), numbers.Max(), 0.0, GRB.INTEGER, "");
-           // var absCost = numbers.Select(x => model.AddVar(0, numbers.Max(), 0.0, GRB.INTEGER, "")).ToList();
+            var numbers = Lines.First().Split(',').Select(x => long.Parse(x)).ToList();
+            objective -= numbers.Count();
+            var bestPosition = model.AddVar(numbers.Min(), numbers.Max(), 0.0, GRB.INTEGER, "");
+            var absCost = numbers.Select(x => model.AddVar(0, numbers.Max(), 0.0, GRB.INTEGER, "")).ToList();
 
-           // for (int i = 0; i < numbers.Count; i++)
-            //{
-            //    model.AddConstr(absCost[i] >= numbers[i] - bestPosition, "");
-            //    model.AddConstr(absCost[i] >= bestPosition - numbers[i], "");
-            //    objective.Add(absCost[i] / 2);
-           // }
-           // numbers.ForEach(number => objective.Add(((number - bestPosition) * (number - bestPosition)) * 0.5));
-           // model.SetObjective(objective);
-          //  model.Optimize();
-           // Console.WriteLine(bestPosition.X);
+            for (int i = 0; i < numbers.Count; i++)
+            {
+                model.AddConstr(absCost[i] >= numbers[i] - bestPosition, "");
+                model.AddConstr(absCost[i] >= bestPosition - numbers[i], "");
+                objective.Add(absCost[i] / 2);
+            }
+            numbers.ForEach(number => objective.Add(((number - bestPosition) * (number - bestPosition)) * 0.5));
+            model.SetObjective(objective);
+            model.Optimize();
+            Console.WriteLine(bestPosition.X);
         }
 
         
