@@ -145,9 +145,9 @@ namespace AOC2
 
         public static void Print<T>(this List<List<T>> list, string seperator = "")
         {
-            foreach (var list in list)
+            foreach (var oldLine in list)
             {
-                string line = string.Join(seperator, list);
+                string line = string.Join(seperator, oldLine);
                 Console.WriteLine(line);
             }
         }

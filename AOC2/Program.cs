@@ -13,7 +13,11 @@ namespace AOC2
         [STAThreadAttribute]
         static void Main(string[] args)
         {
+            var sw = new Stopwatch();
+            sw.Start();
             new Day13();
+            Console.WriteLine(sw.Elapsed.TotalMilliseconds);
+
         }
     }
 }

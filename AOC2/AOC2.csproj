@@ -85,9 +85,6 @@
     <Reference Include="Gurobi80.NET">
       <HintPath>..\..\C#Projects\CleanCommit\bin\Debug\Gurobi80.NET.dll</HintPath>
     </Reference>
-    <Reference Include="Gurobi81.NET">
-      <HintPath>..\..\..\..\..\..\Program Files (x86)\Gurobi\win64\bin\Gurobi81.NET.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">

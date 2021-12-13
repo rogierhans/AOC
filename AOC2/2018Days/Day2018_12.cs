@@ -41,7 +41,7 @@ namespace AOC2
             var grid = new List<List<string>>() { Lines.ClusterLines().First().First().Replace("initial state: ", "").ToCharArray().Select(x => x.ToString()).ToList() };
             grid.Print("");
             var rest = clustered[1];
-            var ruleText = rest.Select(x => Parser.Split(x, " => ")).ToList();
+            var ruleText = rest.Select(x => x.SplitString(" => ")).ToList();
             ruleText.Print("=>");
             Dictionary<List<List<string>>, string> ruleDict = new Dictionary<List<List<string>>, string>();
             foreach (var rule in ruleText)
