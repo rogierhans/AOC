@@ -8,6 +8,20 @@ namespace AOC2
 {
     public static class SL
     {
+        public static T MaxItem<T>(this IEnumerable<T> list, Func<T, double> f)
+        {
+            var item = list.First();
+            var bestNumber = double.MinValue;
+            foreach (var element in list)
+            {
+                var number = f(element);
+                if (bestNumber < number) {
+                    bestNumber = number;
+                    item = element;
+                }
+            }
+            return item;
+        }
 
         public static List<List<R>> ZipGrid<T, P, R>(this List<List<T>> list, List<List<P>> list2, Func<T, P, R> f)
         {
@@ -38,17 +52,14 @@ namespace AOC2
 
             return newList;
         }
-        public static List<R> Product<T1, T2, R>(this List<T1> list1, List<T2> list2, Func<T1, T2, R> f)
+        public static List<R> Product<T1, T2, R>(this IEnumerable<T1> list1, IEnumerable<T2> list2, Func<T1, T2, R> f)
         {
             List<R> newList = new List<R>();
-            int length = Math.Min(list1.Count, list2.Count);
-            for (int i = 0; i < list1.Count; i++)
-            {
-                for (int j = 0; j < list2.Count; j++)
-                {
-                    newList.Add(f(list1[i], list2[j]));
+            int length = Math.Min(list1.Count(), list2.Count());
+            foreach (var element1 in list1) {
+                foreach (var element2 in list2) {
+                    newList.Add(f(element1, element2));
                 }
-
             }
             return newList;
         }
@@ -137,13 +148,13 @@ namespace AOC2
             return line.ToCharArray().Select(x => x.ToString()).ToList();
         }
 
-        public static void Print<T>(this List<T> oldList, string seperator = "")
+        public static void Print<T>(this IEnumerable<T> oldList, string seperator = "")
         {
             string line = string.Join(seperator, oldList);
             Console.WriteLine(line);
         }
 
-        public static void Print<T>(this List<List<T>> list, string seperator = "")
+        public static void Print<T>(this IEnumerable<IEnumerable<T>> list, string seperator = "")
         {
             foreach (var oldLine in list)
             {

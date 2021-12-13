@@ -17,8 +17,8 @@ namespace AOC2
         public const string BLOCK = "\U00002588";
         public override void Main(List<string> Lines)
         {
-            var coords = Lines.FindPattern("{0},{1}", int.Parse, int.Parse);
-            var folds = Lines.FindPattern("fold along {0}={1}", x => x =="x", int.Parse);
+            var coords = Lines.FindPatterns("{0},{1}", int.Parse, int.Parse);
+            var folds = Lines.FindPatterns("fold along {0}={1}", x => x =="x", int.Parse);
             foreach (var (hFlip, index) in folds)
             {
                 var newCoords = new List<(int, int)>();

@@ -63,6 +63,7 @@ namespace AOC2
         }
         private static (List<string>, bool) GetValues(string input, string pattern, string splitString, int number)
         {
+
             string GetValue(Match match, int i) { return match.Groups["value" + i].Value; };
             var regex2 = new Regex(CreateRegex(pattern, splitString, number));
             var m = regex2.Match(input);
@@ -77,13 +78,27 @@ namespace AOC2
 
         public static List<R1> FindPatterns<R1>(this List<string> lines, string pattern, Func<string, R1> f1, string splitString = @"{}")
         {
-            return lines.Select(line => line.TryPattern(pattern, f1, splitString)).Where(x => x.Item2).Select(x => x.Item1).ToList();
+            var successfulParsed = lines.Select(line => line.TryPattern(pattern, f1, splitString)).Where(x => x.Item2);
+            Console.WriteLine(successfulParsed.Count() + " out of " + lines.Count + " \"" + pattern + "\"");
+            return successfulParsed.Select(x => x.Item1).ToList();
         }
-        public static List<(R1,R2)> FindPattern<R1, R2>(this List<string> lines, string pattern, Func<string, R1> f1, Func<string, R2> f2, string splitString = @"{}")
+        public static List<(R1, R2)> FindPatterns<R1, R2>(this List<string> lines, string pattern, Func<string, R1> f1, Func<string, R2> f2, string splitString = @"{}")
         {
             var successfulParsed = lines.Select(line => line.TryPattern(pattern, f1, f2, splitString)).Where(x => x.Item3);
-            Console.WriteLine(successfulParsed.Count() + " out of " + lines.Count + " \"" + pattern+ "\"");
+            Console.WriteLine(successfulParsed.Count() + " out of " + lines.Count + " \"" + pattern + "\"");
             return successfulParsed.Select(x => (x.Item1, x.Item2)).ToList();
+        }
+        public static List<(R1, R2, R3)> FindPatterns<R1, R2, R3>(this List<string> lines, string pattern, Func<string, R1> f1, Func<string, R2> f2, Func<string, R3> f3, string splitString = @"{}")
+        {
+            var successfulParsed = lines.Select(line => line.TryPattern(pattern, f1, f2, f3, splitString)).Where(x => x.Item4);
+            Console.WriteLine(successfulParsed.Count() + " out of " + lines.Count + " \"" + pattern + "\"");
+            return successfulParsed.Select(x => (x.Item1, x.Item2, x.Item3)).ToList();
+        }
+        public static List<(R1, R2, R3, R4)> FindPatterns<R1, R2, R3, R4>(this List<string> lines, string pattern, Func<string, R1> f1, Func<string, R2> f2, Func<string, R3> f3, Func<string, R4> f4, string splitString = @"{}")
+        {
+            var successfulParsed = lines.Select(line => line.TryPattern(pattern, f1, f2, f3, f4, splitString)).Where(x => x.Item5);
+            Console.WriteLine(successfulParsed.Count() + " out of " + lines.Count + " \"" + pattern + "\"");
+            return successfulParsed.Select(x => (x.Item1, x.Item2, x.Item3, x.Item4)).ToList();
         }
         //public static List<R1> FindPatterns<R1>(List<string> lines, string pattern, Func<string, R1> f1, string splitString = @"{}")
         //{
@@ -95,6 +110,11 @@ namespace AOC2
         //}
         private static string CreateRegex(string examplePattern, string splitString, int number)
         {
+            var specials = @"[$&+,:;=?@#|'<>.-^*()%!]".List();
+            foreach (var special in specials)
+            {
+                examplePattern = examplePattern.Replace(special, @"\" + special);
+            }
             string anyChar = @"[\s\S]+";
             string pattern(int s) { return @"(?<value" + s.ToString() + @">" + anyChar + ")"; };
             string variable(int s) { return splitString.Trim(0, 1) + s.ToString() + splitString.Trim(1, 0); };
@@ -103,7 +123,7 @@ namespace AOC2
             {
                 regexString = regexString.Replace(variable(i), pattern(i));
             }
-            // Console.WriteLine(regexString);
+           // Console.WriteLine(regexString);
             return regexString;
         }
 
