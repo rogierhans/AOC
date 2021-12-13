@@ -81,9 +81,9 @@ namespace AOC2
         }
         public static List<(R1,R2)> FindPattern<R1, R2>(this List<string> lines, string pattern, Func<string, R1> f1, Func<string, R2> f2, string splitString = @"{}")
         {
-            var succefullParsed = lines.Select(line => line.TryPattern(pattern, f1, f2, splitString)).Where(x => x.Item3);
-            Console.WriteLine(succefullParsed.Count() + " out of " + lines.Count + " \"" + pattern+ "\"");
-            return succefullParsed.Select(x => (x.Item1, x.Item2)).ToList();
+            var successfulParsed = lines.Select(line => line.TryPattern(pattern, f1, f2, splitString)).Where(x => x.Item3);
+            Console.WriteLine(successfulParsed.Count() + " out of " + lines.Count + " \"" + pattern+ "\"");
+            return successfulParsed.Select(x => (x.Item1, x.Item2)).ToList();
         }
         //public static List<R1> FindPatterns<R1>(List<string> lines, string pattern, Func<string, R1> f1, string splitString = @"{}")
         //{
