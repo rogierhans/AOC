@@ -19,6 +19,7 @@ namespace AOC2
         {
             var begin = Lines.First().List();
             var rules = Lines.FindPatterns("{0} -> {1}", x => x, x => x);
+
             (int, int)[] otherIndex =new (int, int)[rules.Count];
             Dictionary<string, int> stringToIndex = new Dictionary<string, int>();
             for (int i = 0; i < rules.Count; i++)
@@ -53,7 +54,6 @@ namespace AOC2
             Dictionary<string, long> count = new Dictionary<string, long>();
             for (int i = 0; i < bucket.Length; i++)
             {
-
                 var letter1 = rules[i].Item1.List()[0];
                 var letter2 = rules[i].Item1.List()[1];
                 if (!count.ContainsKey(letter1)) count[letter1] = 0;

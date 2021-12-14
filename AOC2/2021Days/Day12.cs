@@ -1,105 +1,153 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.Windows.Forms;
 
 namespace AOC2
 {
-    class Day12 : Day
+    class Day12DFS : Day
     {
-        // First attempt Day12,  it takes a looooooooooong time
 
-        public Day12()
+
+        public Day12DFS()
         {
             SL.printParse = false;
-            GetInput(RootFolder + @"");
+            GetInput(RootFolder + @"2021_12\");
         }
-
+        int startIndex;
+        int endIndex;
+        Dictionary<long, int> Memory;
+        List<string> Caves;
+        List<string> SmallCaves;
+        List<string> BigCaves;
+        Dictionary<string, List<string>> Edges;
         public override void Main(List<string> Lines)
         {
-            // Lines.Print("\n");
-            HashSet<string> ValidTrans = new HashSet<string>();
-            var Transtions = Lines.Select(x => x.Split('-')).ToList();
-            foreach (var trans in Transtions)
+            GetCaves(Lines);
+            startIndex = SmallCaves.IndexOf("start");
+            endIndex = SmallCaves.IndexOf("end");
+            Memory = new Dictionary<long, int>();
+            List<List<int>> NumberOfPaths = new List<List<int>>();
+            for (int i = 0; i < SmallCaves.Count; i++)
             {
-                var from = trans[0];
-                var to = trans[1];
-                ValidTrans.Add(from + "_" + to);
-                ValidTrans.Add(to + "_" + from);
-            }
-            var Froms = Transtions.Select(x => x[0]).ToList();
-            var Tos = Transtions.Select(x => x[1]).ToList();
-
-            HashSet<string> SmallCaves = new HashSet<string>();
-            HashSet<string> BigCaves = new HashSet<string>();
-
-            GetBigAndSmall(Froms, Tos, SmallCaves, BigCaves);
-            //  BigCaves.ToList().Print(" ");
-            //  SmallCaves.ToList().Print(" ");
-            List<string> Caves = new List<string>();
-            Caves.AddRange(BigCaves);
-            Caves.AddRange(SmallCaves);
-            Caves.Add("end");
-            //    GetPermutations(SmallCaves.ToList()).Print(" ");
-            // Console.ReadLine();
-            // .Print(" ");
-
-            long total = CountTransitions("start", "end", ValidTrans, Caves, BigCaves.ToList());
-            var perms = GetPermutations(SmallCaves.ToList());
-            for (int p = 0; p < perms.Count; p++)
-            {
-                if (p % 1000 == 0) {
-                    Console.WriteLine("{0} of {1}", p, perms.Count);
-                }
-
-                var perm = perms[p];
-                long count = 1;
-                //  perm.Print();
-                count *= CountTransitions("start", perm.First(), ValidTrans, Caves, BigCaves.ToList());
-                for (int i = 0; i < perm.Count - 1; i++)
+                var list = new List<int>();
+                for (int j = 0; j < SmallCaves.Count; j++)
                 {
-                    count *= CountTransitions(perm[i], perm[i + 1], ValidTrans, Caves, BigCaves.ToList());
+                    list.Add(CountPaths(SmallCaves[i], SmallCaves[j]));
                 }
-                count *= CountTransitions(perm.Last(), "end", ValidTrans, Caves, BigCaves.ToList());
-                //  Console.WriteLine(perm.Flat() + " " + count);
-                total += count;
-                //  
+                NumberOfPaths.Add(list);
             }
-            Console.WriteLine(total);
-            Console.ReadLine();
+
+            Console.WriteLine("Answer:" + DFSWithMem(NumberOfPaths, new int[Caves.Count], startIndex, false));
         }
 
-        private void GetBigAndSmall(List<string> Froms, List<string> Tos, HashSet<string> SmallCaves, HashSet<string> BigCaves)
+        int counter = 0;
+
+
+        public long Convert(int[] Visited, int caveFrom, bool twice)
         {
-            foreach (var cave in Froms)
+            long acc = caveFrom;
+            int i = 0;
+            for (; i < Visited.Length; i++)
             {
-                if ((cave != "start" && cave != "end") && char.IsUpper(cave.ToCharArray()[0]))
-                {
-                    BigCaves.Add(cave);
-                }
-                if ((cave != "start" && cave != "end") && char.IsLower(cave.ToCharArray()[0]))
-                {
-                    SmallCaves.Add(cave);
-                }
+                acc += Visited[i] << (i + 4);
             }
-            foreach (var cave in Tos)
-            {
-                if ((cave != "start" && cave != "end") && char.IsUpper(cave.ToCharArray()[0]))
-                {
-                    BigCaves.Add(cave);
-                }
-                if ((cave != "start" && cave != "end") && char.IsLower(cave.ToCharArray()[0]))
-                {
-                    SmallCaves.Add(cave);
-                }
-            }
-
+            acc += (twice ? 1 : 0) << (i + 4);
+            return acc;
         }
 
-        private long CountTransitions(string start, string end, HashSet<string> ValidTrans, List<string> caves, List<string> BigCaves)
+        private int DFS(List<List<int>> NumberOfPaths, int[] Visited, int caveFrom, bool twice)
+        {
+            counter++;
+            int count = 0;
+            for (int caveTo = 0; caveTo < NumberOfPaths.Count; caveTo++)
+            {
+                if (NumberOfPaths[caveFrom][caveTo] == 0 || caveTo == startIndex) continue;
+                if (caveTo == endIndex && NumberOfPaths[caveFrom][caveTo] > 0)
+                {
+                    count += NumberOfPaths[caveFrom][caveTo];
+                }
+                else if (Visited[caveTo] == 0)
+                {
+
+                    Visited[caveTo] = 1;
+                    count += (NumberOfPaths[caveFrom][caveTo]) * DFS(NumberOfPaths, Visited, caveTo, twice);
+                    Visited[caveTo] = 0;
+                }
+                else
+                if (!twice && (Visited[caveTo] == 1))
+                {
+                    count += (NumberOfPaths[caveFrom][caveTo]) * DFS(NumberOfPaths, Visited, caveTo, true);
+                }
+            }
+            return count;
+        }
+        private int DFSWithMem(List<List<int>> NumberOfPaths, int[] Visited, int caveFrom, bool twice)
+        {
+
+            long key = Convert(Visited, caveFrom, twice);
+            if (Memory.ContainsKey(key)) return Memory[key];
+            counter++;
+            int count = 0;
+            for (int caveTo = 0; caveTo < NumberOfPaths.Count; caveTo++)
+            {
+                if (NumberOfPaths[caveFrom][caveTo] == 0 || caveTo == startIndex) continue;
+                if (caveTo == endIndex && NumberOfPaths[caveFrom][caveTo] > 0)
+                {
+                    count += NumberOfPaths[caveFrom][caveTo];
+                }
+                else if (Visited[caveTo] == 0)
+                {
+                    Visited[caveTo] = 1;
+                    count += (NumberOfPaths[caveFrom][caveTo]) * DFSWithMem(NumberOfPaths, Visited, caveTo, twice);
+                    Visited[caveTo] = 0;
+                }
+                else
+                if (!twice && (Visited[caveTo] == 1))
+                {
+                    count += (NumberOfPaths[caveFrom][caveTo]) * DFSWithMem(NumberOfPaths, Visited, caveTo, true);
+                }
+            }
+            Memory[key] = count;
+            return count;
+        }
+
+        private void GetCaves(List<string> Lines)
+        {
+            HashSet<string> CavesSet = new HashSet<string>();
+            HashSet<string> SmallCavesSet = new HashSet<string>();
+            HashSet<string> BigCavesSet = new HashSet<string>();
+            Edges = new Dictionary<string, List<string>>();
+            foreach (var trans in Lines.Select(x => x.Split('-')))
+            {
+                void Add(string from, string to)
+                {
+                    if (!Edges.ContainsKey(from)) Edges[from] = new List<string>();
+                    Edges[from].Add(to);
+                }
+                CavesSet.Add(trans[0]);
+                CavesSet.Add(trans[1]);
+                Add(trans[0], trans[1]);
+                Add(trans[1], trans[0]);
+            }
+            foreach (var cave in CavesSet)
+            {
+                if (char.IsUpper(cave.ToCharArray()[0]))
+                {
+                    BigCavesSet.Add(cave);
+                }
+                if (char.IsLower(cave.ToCharArray()[0]))
+                {
+                    SmallCavesSet.Add(cave);
+                }
+            }
+
+            Caves = CavesSet.ToList();
+            SmallCaves = SmallCavesSet.ToList();
+            BigCaves = BigCavesSet.ToList();
+        }
+
+        private int CountPaths(string start, string end)
         {
 
             Queue<string> q = new Queue<string>();
@@ -108,120 +156,27 @@ namespace AOC2
             int count = 0;
             while (q.Count > 0)
             {
+                counter++;
                 var current = q.Dequeue();
-                //  Console.WriteLine("current {0}", current);
-
-                foreach (var next in caves.Where(next => ValidTrans.Contains(current + "_" + next) && !visted.Contains(next)))
+                foreach (var next in Caves.Where(next => Edges.ContainsKey(current) && Edges[current].Contains(next) && !visted.Contains(next)))
                 {
                     if (next == end)
                     {
                         count++;
                     }
-                    if (BigCaves.Contains(next))
+                    else if (BigCaves.Contains(next))
                     {
                         visted.Add(next);
                         q.Enqueue(next);
                     }
                 }
-
             }
             return count;
         }
 
 
-        List<List<string>> GetPermutations(List<string> list)
-        {
-            HashSet<string> set = new HashSet<string>();
-            var allPerms = new List<List<string>>();
-            for (int i = 1; i <= list.Count; i++)
-            {
-                foreach (var perm in GetPermutations(list, i))
-                {
-                    string flat = perm.Flat();
-                    if (!set.Contains(flat))
-                    {
-                        set.Add(flat);
-                        allPerms.Add(perm);
-                    }
-                }
-            }
-            for (int i = 0; i < list.Count; i++)
-            {
-                List<string> newList = new List<string>(list);
-                newList.Add(list[i]);
-                // Console.WriteLine(newList.Flat());
-                for (int j = 1; j <= newList.Count; j++)
-                {
-                    foreach (var perm in GetPermutations(newList, j))
-                    {
-                        string flat = perm.Flat();
-                        if (!set.Contains(flat))
-                        {
-                            set.Add(flat);
-                            allPerms.Add(perm);
-                        }
-                    }
-                }
-            }
-            return allPerms;
-        }
-
-        List<List<string>> GetPermutations(List<string> list, int length)
-        {
-            if (length == 1) return list.Select(t => new List<string> { t }).ToList();
-            else
-            {
-                var allPerms = new List<List<string>>();
-                for (int i = 0; i < list.Count; i++)
-                {
-                    var filter = new List<string>(list);
-                    filter.RemoveAt(i);
-                    var perms = GetPermutations(filter, length - 1).DeepCopy();
-                    perms.ForEach(x => x.Insert(0, list[i]));
-                    allPerms.AddRange(perms);
-                }
-                return allPerms;
-            }
-        }
 
 
 
-
-        class Element
-        {
-            // string key = "";
-            //long ID;
-
-
-            public Element(string line)
-            {
-                ParseSingle(line);
-                //ParseMulti(lines);
-            }
-
-
-            private void ParseSingle(string line)
-            {
-                var sperator = '-';
-                var input = line.Split(sperator);
-            }
-
-
-            private void ParseMulti(List<string> lines)
-            {
-                SL.Line();
-                for (int i = 0; i < lines.Count; i++)
-                {
-                    var line = lines[i];
-                    SL.Log(line);
-
-                    var sperator = ' ';
-
-                    var input = line.Split(sperator).Select(x => long.Parse(x)).ToList();
-
-                }
-            }
-
-        }
     }
 }

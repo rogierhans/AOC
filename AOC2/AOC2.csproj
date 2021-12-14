@@ -100,25 +100,23 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Day.cs" />
-    <Compile Include="2021Days\Day0.cs" />
-    <Compile Include="2021Days\Day1.cs" />
+    <Compile Include="2021Days\Day00.cs" />
+    <Compile Include="2021Days\Day01.cs" />
     <Compile Include="2021Days\Day10.cs" />
     <Compile Include="2021Days\Day11.cs" />
-    <Compile Include="2021Days\Day2.cs" />
+    <Compile Include="2021Days\Day02.cs" />
     <Compile Include="2018Days\Day2018_12.cs" />
-    <Compile Include="2021Days\Day3.cs" />
-    <Compile Include="2021Days\Day4.cs" />
-    <Compile Include="2021Days\Day5.cs" />
-    <Compile Include="2021Days\Day6.cs" />
-    <Compile Include="2021Days\Day7.cs" />
-    <Compile Include="2021Days\Day8.cs" />
-    <Compile Include="2021Days\Day9.cs" />
+    <Compile Include="2021Days\Day03.cs" />
+    <Compile Include="2021Days\Day04.cs" />
+    <Compile Include="2021Days\Day05.cs" />
+    <Compile Include="2021Days\Day06.cs" />
+    <Compile Include="2021Days\Day07.cs" />
+    <Compile Include="2021Days\Day08.cs" />
+    <Compile Include="2021Days\Day09.cs" />
     <Compile Include="2018Days\Day2018_01.cs" />
     <Compile Include="2018Days\Day2018_02.cs" />
-    <Compile Include="2021Days\Day12.cs" />
     <Compile Include="2018Days\Day2018_03.cs" />
-    <Compile Include="2021Days\Day12DFS.cs" />
-    <Compile Include="2021Days\Day12BFS.cs" />
+    <Compile Include="2021Days\Day12.cs" />
     <Compile Include="2021Days\Day13.cs" />
     <Compile Include="2018Days\Day2018_04.cs" />
     <Compile Include="2021Days\Day14.cs" />
