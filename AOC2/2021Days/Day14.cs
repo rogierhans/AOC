@@ -23,13 +23,12 @@ namespace AOC2
             Dictionary<string, int> stringToIndex = new Dictionary<string, int>();
             for (int i = 0; i < rules.Count; i++)
             {
-                var (a, b) = rules[i];
                 stringToIndex[rules[i].Item1] = i;
             }
             for (int i = 0; i < rules.Count; i++)
             {
                 var (a, b) = rules[i];
-                otherIndex[i] = (stringToIndex[a.Substring(0, 1) + b], stringToIndex[b + a.Substring(1, 1)]);
+                otherIndex[i] = (stringToIndex[a.First() + b], stringToIndex[b + a.Last()]);
             }
 
             long[] bucket = new long[rules.Count];
