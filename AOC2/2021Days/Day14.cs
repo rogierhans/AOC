@@ -19,13 +19,17 @@ namespace AOC2
         {
             var begin = Lines.First().List();
             var rules = Lines.FindPatterns("{0} -> {1}", x => x, x => x);
-            Dictionary<string, (string, string)> dict = new Dictionary<string, (string, string)>();
+            (int, int)[] otherIndex =new (int, int)[rules.Count];
             Dictionary<string, int> stringToIndex = new Dictionary<string, int>();
-            Dictionary<int, string> indexToString = new Dictionary<int, string>();
             for (int i = 0; i < rules.Count; i++)
             {
+                var (a, b) = rules[i];
                 stringToIndex[rules[i].Item1] = i;
-                indexToString[i] = rules[i].Item1;
+            }
+            for (int i = 0; i < rules.Count; i++)
+            {
+                var (a, b) = rules[i];
+                otherIndex[i] = (stringToIndex[a.Substring(0, 1) + b], stringToIndex[b + a.Substring(1, 1)]);
             }
 
             long[] bucket = new long[rules.Count];
@@ -35,21 +39,13 @@ namespace AOC2
                 bucket[stringToIndex[key]]++;
             }
 
-            foreach (var (a, b) in rules)
-            {
-
-                dict[a] = (a.List()[0] + b, b + a.List()[1]);
-
-            }
-
             for (int k = 0; k < 40; k++)
             {
                 long[] newBucket = new long[rules.Count];
                 for (int i = 0; i < newBucket.Length; i++)
                 {
-                    var (key1, key2) = dict[indexToString[i]];
-                    newBucket[stringToIndex[key1]] += bucket[i];
-                    newBucket[stringToIndex[key2]] += bucket[i];
+                    newBucket[otherIndex[i].Item1] += bucket[i];
+                    newBucket[otherIndex[i].Item2] += bucket[i];
                 }
                 bucket = newBucket;
             }
