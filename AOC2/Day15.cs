@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Priority_Queue;
 namespace AOC2
 {
     class Day15 : Day
@@ -18,6 +19,50 @@ namespace AOC2
         public override void Main(List<string> Lines)
         {
             var grid = Lines.Select(g => g.List().Select(int.Parse).ToList()).ToList();
+            List<List<int>> bigGrid = GreateBigGrid(grid);
+            grid = bigGrid;
+            var dist = new List<List<long>>();
+            var q = new SimplePriorityQueue<(int, int), long>();
+            Init(grid, dist, q);
+            dist[0][0] = 0;
+            q.UpdatePriority((0, 0), 0);
+
+            while (q.Count > 0)
+            {
+                var (x, y) = q.Dequeue();
+                if (dist[x][y] > dist.Last().Last()) break;
+                foreach (var (nx, ny) in grid.Neighbor4(x, y))
+                {
+                    var riskLevel = grid[nx][ny];
+                    var newTotal = riskLevel + dist[x][y];
+                    if (dist[nx][ny] > newTotal)
+                    {
+                        dist[nx][ny] = newTotal;
+                        q.UpdatePriority((nx, ny), newTotal);
+                    }
+                }
+
+            }
+            Console.WriteLine(dist.Last().Last());
+            // Console.ReadLine();
+        }
+
+        private static void Init(List<List<int>> grid, List<List<long>> dist, SimplePriorityQueue<(int, int), long> coords2)
+        {
+            for (int i = 0; i < grid.Count; i++)
+            {
+                List<long> list = new List<long>();
+                for (int j = 0; j < grid.Count; j++)
+                {
+                    list.Add(long.MaxValue);
+                    coords2.Enqueue((i, j), long.MaxValue);
+                }
+                dist.Add(list);
+            }
+        }
+
+        private static List<List<int>> GreateBigGrid(List<List<int>> grid)
+        {
             var bigGrid = new List<List<int>>();
             for (int r = 0; r < 5; r++)
             {
@@ -35,44 +80,8 @@ namespace AOC2
                 }
 
             }
-            grid = bigGrid;
-            List<List<long>> dist = new List<List<long>>();
 
-            List<List<(int, int)>> prev = new List<List<(int, int)>>();
-            var coords = new List<(int, int)>();
-            for (int i = 0; i < grid.Count; i++)
-            {
-                List<long> list = new List<long>();
-                List<(int, int)> list2 = new List<(int, int)>();
-                for (int j = 0; j < grid.Count; j++)
-                {
-                    list.Add(long.MaxValue);
-                    list2.Add((-1, -1));
-                    coords.Add((i, j));
-                }
-                dist.Add(list);
-                prev.Add(list2);
-            }
-            dist[0][ 0] = 0;
-            while (coords.Count > 0)
-            {
-                var element = coords.MaxItem(e => (double)-dist[e.Item1][e.Item2]);
-                coords.Remove(element);
-                var totalRisk = dist[element.Item1][element.Item2];
-                foreach (var (nx, ny) in grid.Neighbor4(element.Item1, element.Item2))
-                {
-                    var riskLevel = grid[nx][ny];
-                    var newTotal = riskLevel + totalRisk;
-                    if (dist[nx][ny] > newTotal)
-                    {
-                        dist[nx][ny] = newTotal;
-                        prev[nx][ny] = (element.Item1, element.Item2);
-                    }
-                }
-
-            }
-            dist.Print(" ");
-            Console.WriteLine("done");
+            return bigGrid;
         }
     }
 }
