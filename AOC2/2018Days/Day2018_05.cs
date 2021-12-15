@@ -23,9 +23,9 @@ namespace AOC2
             var Combination2 = lower.Zip(upper, (x, y) => x + y);
             var Combination1 = upper.Zip(lower, (x, y) => x + y);
             var Combination3 = upper.Zip(lower, (x, y) => (x , y));
-            Combination1.Print(" ");
-            Combination2.Print(" ");
-            Combination3.Print(" ");
+            Combination1.ToList().Print(" ");
+            Combination2.ToList().Print(" ");
+            Combination3.ToList().Print(" ");
 
             int newCount = -1;
             foreach (var co in Combination3) {

@@ -121,6 +121,12 @@
     <Compile Include="2018Days\Day2018_04.cs" />
     <Compile Include="2021Days\Day14.cs" />
     <Compile Include="2018Days\Day2018_05.cs" />
+    <Compile Include="2018Days\Day2018_06.cs" />
+    <Compile Include="2018Days\Day2018_07.cs" />
+    <Compile Include="2018Days\Day2018_08.cs" />
+    <Compile Include="Day15.cs" />
+    <Compile Include="2018Days\Day2018_09.cs" />
+    <Compile Include="2018Days\Day2018_10.cs" />
     <Compile Include="ListExtentions.cs" />
     <Compile Include="GOL.cs" />
     <Compile Include="Grid.cs" />

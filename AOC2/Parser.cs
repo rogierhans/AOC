@@ -123,7 +123,7 @@ namespace AOC2
             {
                 regexString = regexString.Replace(variable(i), pattern(i));
             }
-           // Console.WriteLine(regexString);
+         //  Console.WriteLine(regexString);
             return regexString;
         }
 

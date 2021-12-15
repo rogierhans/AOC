@@ -15,7 +15,8 @@ namespace AOC2
             foreach (var element in list)
             {
                 var number = f(element);
-                if (bestNumber < number) {
+                if (bestNumber < number)
+                {
                     bestNumber = number;
                     item = element;
                 }
@@ -56,8 +57,10 @@ namespace AOC2
         {
             List<R> newList = new List<R>();
             int length = Math.Min(list1.Count(), list2.Count());
-            foreach (var element1 in list1) {
-                foreach (var element2 in list2) {
+            foreach (var element1 in list1)
+            {
+                foreach (var element2 in list2)
+                {
                     newList.Add(f(element1, element2));
                 }
             }
@@ -148,13 +151,13 @@ namespace AOC2
             return line.ToCharArray().Select(x => x.ToString()).ToList();
         }
 
-        public static void Print<T>(this IEnumerable<T> oldList, string seperator = "")
+        public static void Print<T>(this List<T> oldList, string seperator = "")
         {
             string line = string.Join(seperator, oldList);
             Console.WriteLine(line);
         }
 
-        public static void Print<T>(this IEnumerable<IEnumerable<T>> list, string seperator = "")
+        public static void Print<T>(this List<List<T>> list, string seperator = "")
         {
             foreach (var oldLine in list)
             {
@@ -199,6 +202,22 @@ namespace AOC2
         public static List<(int, int)> NeighborList<T>(this List<List<T>> list, int i, int j, int minI, int maxI, int minJ, int maxJ, bool includeSelf = true)
         {
             return (NeighborList(i, j, minI, maxI, minJ, maxJ, list.Count, list[0].Count, includeSelf));
+        }
+
+        public static Value Get<Key, Value>(this Dictionary<Key, Value> dict, Key key, Value baseValue)
+        {
+            if (!dict.ContainsKey(key)) dict[key] = baseValue;
+            return dict[key];
+        }
+
+
+        public static LinkedListNode<T> CycleNext<T>(this LinkedListNode<T> currentNode)
+        {
+            return currentNode.Next ?? currentNode.List.First;
+        }
+        public static LinkedListNode<T> CyclePrev<T>(this LinkedListNode<T> currentNode)
+        {
+            return currentNode.Previous ?? currentNode.List.Last;
         }
 
         public static List<(int, int)> NeighborList(int i, int j, int minI, int maxI, int minJ, int maxJ, int width, int height, bool includeSelf = true)
