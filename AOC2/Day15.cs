@@ -15,15 +15,6 @@ namespace AOC2
         }
         public const string BLOCK = "\U00002588";
 
-
-        public long GetKey(int x, int y, int distance)
-        {
-            distance = distance << 4;
-            distance += x;
-            distance = distance << 4;
-            distance += y;
-            return distance;
-        }
         public override void Main(List<string> Lines)
         {
             var grid = Lines.Select(g => g.List().Select(int.Parse).ToList()).ToList();
@@ -44,15 +35,10 @@ namespace AOC2
                 }
 
             }
-            // bigGrid.Print("");
-            ///  Console.ReadLine();
-            ///  
             grid = bigGrid;
             List<List<long>> dist = new List<List<long>>();
 
             List<List<(int, int)>> prev = new List<List<(int, int)>>();
-
-            var coordsSL = new SortedList<long, (int, int)>();
             var coords = new List<(int, int)>();
             for (int i = 0; i < grid.Count; i++)
             {
@@ -63,17 +49,13 @@ namespace AOC2
                     list.Add(long.MaxValue);
                     list2.Add((-1, -1));
                     coords.Add((i, j));
-                    if (!(i == 0 && j == 0))
-                        coordsSL.Add(long.MaxValue, (i, j));
                 }
                 dist.Add(list);
                 prev.Add(list2);
             }
-            coordsSL.Add(0, (0, 0));
+            dist[0][ 0] = 0;
             while (coords.Count > 0)
             {
-                var element2 = coordsSL.First();
-
                 var element = coords.MaxItem(e => (double)-dist[e.Item1][e.Item2]);
                 coords.Remove(element);
                 var totalRisk = dist[element.Item1][element.Item2];
