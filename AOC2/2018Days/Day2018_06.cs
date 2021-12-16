@@ -19,7 +19,7 @@ namespace AOC2
         {
             var coords = Lines.FindPatterns("{0}, {1}", int.Parse, int.Parse);
             coords.Print();
-            var grid = SL.MakeList(coords.Max(x => x.Item1) + 1, coords.Max(x => x.Item2) + 1, "A");
+            var grid = Grid.Make(coords.Max(x => x.Item1) + 1, coords.Max(x => x.Item2) + 1, "A");
             int count = 0;
             for (int i = 0; i < grid.Count; i++)
             {

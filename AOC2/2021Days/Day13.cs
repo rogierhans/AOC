@@ -36,7 +36,7 @@ namespace AOC2
 
         private static void Print(List<(int, int)> coords)
         {
-            var newGrid = SL.MakeList(coords.Max(x => x.Item2) + 1, coords.Max(x => x.Item1) + 1, 0);
+            var newGrid = Grid.Make(coords.Max(x => x.Item2) + 1, coords.Max(x => x.Item1) + 1, 0);
             foreach (var (x, y) in coords)
             {
                 newGrid[y][x] = 1;

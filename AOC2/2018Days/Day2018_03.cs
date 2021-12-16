@@ -27,7 +27,7 @@ namespace AOC2
             var yy = coords.Select(x => x[1]).ToList();
             var width = areas.Select(x => x[0]).ToList();
             var height = areas.Select(x => x[1]).ToList();
-            var grid = SL.MakeList(xx.Max() + width.Max(), yy.Max() + height.Max(), 0);
+            var grid = Grid.Make(xx.Max() + width.Max(), yy.Max() + height.Max(), 0);
             //coords.Print(",");
             // areas.Print(",");
             //  grid.Print("");

@@ -122,7 +122,7 @@ namespace AOC2
             {
                 regexString = regexString.Replace(variable(i), pattern(i));
             }
-         //  Console.WriteLine(regexString);
+            //  Console.WriteLine(regexString);
             return regexString;
         }
 
@@ -151,15 +151,14 @@ namespace AOC2
             return List;
         }
 
+ 
+
         public static string Trim(this string line, int front, int back)
         {
             return line.Substring(front, line.Count() - front - back);
         }
 
-        public static (string, string) Split_Inc(string line, int index)
-        {
-            return (line.Substring(0, index), line.Substring(index, line.Count() - index));
-        }
+
         public static (string, string) Split_Ex(string line, int index)
         {
             return (line.Substring(0, index), line.Substring(index + 1, line.Count() - (index + 1)));

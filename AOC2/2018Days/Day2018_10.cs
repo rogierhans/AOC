@@ -51,7 +51,7 @@ namespace AOC2
              if (height < 200 && width < 200)
             {
                 {
-                    var newGrid = SL.MakeList(height, width, 0);
+                    var newGrid = Grid.Make(height, width, 0);
                     foreach (var (x, y) in coords)
                     {
                         newGrid[y - minY][x - minX] = 1;

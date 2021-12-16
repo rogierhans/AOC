@@ -50,7 +50,6 @@ namespace AOC2
                     }
                 }
             }
-            // Console.WriteLine(total);
             return  total;
         }
     }

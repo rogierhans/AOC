@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.Windows.Forms;
 
 namespace AOC2
 {
@@ -14,139 +11,124 @@ namespace AOC2
 
         public Day2018_12()
         {
-            SL.printParse = true;
-
-            string folder = @"C:\Users\Rogier\Desktop\AOC\";
-            string name = "input.txt";
-            string filename = folder + name;
-            string filenameTest = folder + "test.txt";
-            var testLines = File.ReadAllLines(filenameTest).ToList();
-            var inputLines = File.ReadAllLines(filename).ToList();
-            Console.WriteLine("test:");
-            ModeSelector(testLines);
-            Console.WriteLine("input:");
-            ModeSelector(inputLines);
+            SL.printParse = false;
+            GetInput(RootFolder + @"2018_12\");
         }
-
-
-        private void ModeSelector(List<string> Lines)
+        public const string BLOCK = "\U00002588";
+        public override void Main(List<string> Lines)
         {
-            IndexForLoop(Lines);
-            //ParseLines(Lines);
-        }
 
-        private void IndexForLoop(List<string> Lines)
-        {
-            var clustered = Lines.ClusterLines();
-            var grid = new List<List<string>>() { Lines.ClusterLines().First().First().Replace("initial state: ", "").ToCharArray().Select(x => x.ToString()).ToList() };
-            grid.Print("");
-            var rest = clustered[1];
-            var ruleText = rest.Select(x => x.SplitString(" => ")).ToList();
-            ruleText.Print("=>");
-            Dictionary<List<List<string>>, string> ruleDict = new Dictionary<List<List<string>>, string>();
-            foreach (var rule in ruleText)
+            var state = Lines.FindPatterns("initial state: {0}", x => x.List().Select(y => y == "#" ? 1 : 0).ToList()).First();
+            state.Insert(0, 0);
+            state.Insert(0, 0);
+            state.Insert(0, 0);
+            state.Insert(0, 0);
+            state.Add(0);
+            state.Add(0);
+            state.Add(0);
+            state.Add(0);
+            Console.WriteLine(state.Select(x => x.ToString()).ToList().Flat());
+            var rules = Lines.FindPatterns("{0} => {1}", x => x.List(), x => x);
+            Console.WriteLine(1 << 5);
+            var rulesDict = new int[1 << 5];
+            foreach (var (from, to) in rules)
             {
-                var pattern = rule.First().ToCharArray().Select(x => x.ToString()).ToList();
-               // pattern.Print();
-                //Console.WriteLine(rule[1]);
-                ruleDict[new List<List<string>> { pattern }] = rule[1];
+                var key = Convert.ToInt32(from.Select(y => y == "#" ? "1" : "0").ToList().Flat(), 2);
+                //Console.WriteLine(key);
+                rulesDict[key] = to == "#" ? 1 : 0;
             }
-            int offset = 0;
-            for (int j = 0; j < 20; j++)
-            {
-                grid = GOL.Update(grid, ruleDict, ".",0,2, 0, 2);
-                offset += 4;
-                var number = grid.First().Select((s, i) => s == "#" ? i - offset :0).Sum(); 
-                grid.Select(x => x.Skip(offset).ToList()).ToList().Print("");
-                Console.WriteLine(number);
-            }
-           // Console.ReadLine();
-        }
 
-        private void GOLHistory()
-        {
-            Console.WriteLine("hoi");
-
-            var grid = SL.MakeList(50, 50, ".");
-            grid[2][2] = "O";
-            grid[2][3] = "O";
-            grid[2][4] = "O";
-            grid[1][4] = "O";
-            grid[0][3] = "O";
-            grid[12][2] = "O";
-            grid[12][3] = "O";
-            grid[12][4] = "O";
-            grid[11][4] = "O";
-            grid[10][3] = "O";
-            grid[10][4] = "O";
-
-            grid.Print();
             while (true)
             {
-
-                string Rule(string status, int count)
+                List<int> newstate = new List<int>();
+                newstate.Insert(0, 0);
+                newstate.Insert(0, 0);
+                newstate.Insert(0, 0);
+                newstate.Insert(0, 0);
+                bool start = false;
+                for (int i = 2; i < state.Count - 2; i++)
                 {
-                    if (count == 2 && status == "O") return "O";
-                    else if (count == 3) return "O";
-                    else return ".";
+                    int key = Converter(state, i);
+                  //  Console.WriteLine(key);
+                    var next = rulesDict[key];
+                    if(next==1) start = true;
+                    if(start)
+                        newstate.Add(next);
                 }
-                int neighborhoodLength = 3;
-                int neighborhoodWidth = 3;
-                grid = GOL.UpdateClassic(grid, neighborhoodLength, neighborhoodWidth, x => x == "O" ? 1 : 0, Rule);
-
+                newstate.Add(0);
+                newstate.Add(0);
+                newstate.Add(0);
+                newstate.Add(0);
+                while (newstate[newstate.Count - 1] == 0 && newstate[newstate.Count - 2] == 0 && newstate[newstate.Count - 3] == 0 && newstate[newstate.Count - 4] == 0 && newstate[newstate.Count - 5] == 0) {
+                    newstate.RemoveAt(newstate.Count - 1);
+                }
+                if (state.Select(x=> x.ToString()).ToList().Flat() == newstate.Select(x => x.ToString()).ToList().Flat()) break;
+                state = newstate;
+               // newstate.Select(x => x == 1 ? "#" : ".").ToList().Print(" ");
+                //Console.WriteLine();
+                //Console.WriteLine();
+                //Console.ReadLine();
             }
+            Console.WriteLine(state.Where(x => x > 0).Count());
+            Console.ReadLine();
+        }
+
+        public int Converter(List<int> state, int middle)
+        {
+            ///Console.WriteLine(middle + "<- index " + state.Count);
+            int number = 0;
+            for (int i = 0; i < 5; i++)
+            {
+                number |= state[middle + 2] << 0;
+                number |= state[middle + 1] << 1;
+                number |= state[middle] << 2;
+                number |= state[middle - 1] << 3;
+                number |= state[middle - 2] << 4;
+            }
+
+            return number;
         }
 
 
 
-        private void ParseLines(List<string> lines)
+
+
+
+        class DictList2D<T>
         {
-            var clusterLine = lines.ClusterLines();
-            var parsed = clusterLine;
-            //var numbers = parsed.First().First().Split(',').Select(x => long.Parse(x)).ToList();
-            var element = parsed.Select(line => new Element(line)).ToList();
-            for (int i = 0; i < element.Count; i++)
+            Dictionary<int, Dictionary<int, T>> dict = new Dictionary<int, Dictionary<int, T>>();
+            private readonly T DefaultValue;
+
+            public DictList2D(T defaultValue)
             {
-
-
-            }
-        }
-
-        class Element
-        {
-            // string key = "";
-            //long ID;
-
-
-            public Element(List<string> lines)
-            {
-                ///ParseSingle(lines.First());
-                ParseMulti(lines);
-            }
-            private void ParseSingle(string line)
-            {
-                var sperator = ' ';
-                var input = line.Split(sperator);
+                DefaultValue = defaultValue;
             }
 
-
-            private void ParseMulti(List<string> lines)
+            public T Get(int i, int j)
             {
-                SL.Line();
-                for (int i = 1; i < lines.Count; i++)
+                if (dict.ContainsKey(i) && dict[i].ContainsKey(j)) return dict[i][j];
+                else return DefaultValue;
+            }
+            public void Add(int i, int j, T element)
+            {
+                if (dict.ContainsKey(i)) dict[i] = new Dictionary<int, T>();
+                dict[i][j] = element;
+            }
+
+            public List<(T, int, int)> GetElements()
+            {
+                var list = new List<(T, int, int)>();
+                foreach (var kvp in dict)
                 {
-                    var line = lines[i];
-                    SL.Log(line);
-
-                    var sperator = ' ';
-
-                    var input = line.Split(sperator).Select(x => long.Parse(x)).ToList();
-
+                    int index1 = kvp.Key;
+                    foreach (var kvp2 in kvp.Value)
+                    {
+                        int index2 = kvp2.Key;
+                        list.Add((kvp2.Value, index1, index2));
+                    }
                 }
+                return list;
             }
-
-
         }
-
     }
 }
