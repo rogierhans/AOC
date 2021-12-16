@@ -45,11 +45,9 @@ namespace AOC2
         private long ReadPacket(ref string bits)
         {
 
-
             int version = ReadInt(ref bits, 3);
-            int packet = ReadInt(ref bits, 3);
-
-            if (packet == 4)
+            int packetID = ReadInt(ref bits, 3);
+            if (packetID == 4)
             {
                 return ReadLiteral(ref bits);
             }
@@ -58,18 +56,18 @@ namespace AOC2
                 string mode = ReadString(ref bits, 1);
                 if (mode == "0")
                 {
-                    return ReadSubPacket(ref bits,packet);
+                    return ReadSubPacket(ref bits, packetID);
                 }
                 if (mode == "1")
                 {
-                    return ReadSubPacket2(ref bits, packet);
+                    return ReadSubPacket2(ref bits, packetID);
                 }
             }
             throw new Exception("");
 
 
         }
-        private long ReadSubPacket(ref string bits,int packet)
+        private long ReadSubPacket(ref string bits, int packetID)
         {
             List<long> numbers = new List<long>();
             int length = ReadInt(ref bits, 15);
@@ -78,9 +76,9 @@ namespace AOC2
             {
                 numbers.Add(ReadPacket(ref subBits));
             }
-            return ToNumber(numbers, packet.ToString());
+            return ToNumber(numbers, packetID.ToString());
         }
-        private long ReadSubPacket2(ref string bits, int packet)
+        private long ReadSubPacket2(ref string bits, int packetID)
         {
             List<long> numbers = new List<long>();
             var length = ReadInt(ref bits, 11);
@@ -88,7 +86,7 @@ namespace AOC2
             {
                 numbers.Add(ReadPacket(ref bits));
             }
-            return ToNumber(numbers, packet.ToString());
+            return ToNumber(numbers, packetID.ToString());
         }
         private long ReadLiteral(ref string bits)
         {
