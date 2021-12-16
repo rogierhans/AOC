@@ -109,45 +109,18 @@ namespace AOC2
         {
             var first = line.Substring(0, take);
             line = line.Substring(take, line.Length - take);
-
             return first;
         }
 
         private long ToNumber(List<long> numbers, string mode)
         {
-            if (mode == "0")
-            {
-                return numbers.Sum();
-            }
-            if (mode == "1")
-            {
-                long product = 1;
-                foreach (var number in numbers)
-                {
-                    product *= number;
-                }
-                return product;
-            }
-            if (mode == "2")
-            {
-                return numbers.Min();
-            }
-            if (mode == "3")
-            {
-                return numbers.Max();
-            }
-            if (mode == "5")
-            {
-                return numbers[0] > numbers[1] ? 1 : 0;
-            }
-            if (mode == "6")
-            {
-                return numbers[0] < numbers[1] ? 1 : 0;
-            }
-            if (mode == "7")
-            {
-                return numbers[0] == numbers[1] ? 1 : 0;
-            }
+            if (mode == "0") return numbers.Sum();
+            if (mode == "1") return numbers.Aggregate((a, b) => a * b);
+            if (mode == "2") return numbers.Min();
+            if (mode == "3") return numbers.Max();
+            if (mode == "5") return numbers[0] > numbers[1] ? 1 : 0;
+            if (mode == "6") return numbers[0] < numbers[1] ? 1 : 0;
+            if (mode == "7") return numbers[0] == numbers[1] ? 1 : 0;
             throw new Exception("");
         }
     }
