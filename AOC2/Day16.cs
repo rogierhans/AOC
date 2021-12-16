@@ -41,53 +41,70 @@ namespace AOC2
             Console.WriteLine(number == 180616437720);
             Console.ReadLine();
         }
-
+        int ReadInt(ref string subBists, int length) { return Convert.ToInt32(ReadString(ref subBists, length), 2); }
         private long ReadPacket(ref string bits)
         {
-            int ReadInt(ref string subBists, int length) { return Convert.ToInt32(ReadString(ref subBists, length), 2); };
-            List<long> numbers = new List<long>();
+
+
             int version = ReadInt(ref bits, 3);
             int packet = ReadInt(ref bits, 3);
-            string bitsStringLiteral = "";
+
             if (packet == 4)
             {
-                while (true)
-                {
-                    bool breakNext = ReadString(ref bits, 1) != "1";
-                    string block = ReadString(ref bits, 4);
-                    if (block.Length < 4)
-                    {
-                        while (block.Length < 4) { block += "0"; }
-                    }
-                    bitsStringLiteral += block;
-                    if (breakNext) break;
-                }
-                return Convert.ToInt64(bitsStringLiteral, 2);
+                return ReadLiteral(ref bits);
             }
             else
             {
                 string mode = ReadString(ref bits, 1);
                 if (mode == "0")
                 {
-                    int length = ReadInt(ref bits, 15);
-                    string subBits = ReadString(ref bits, length);
-                    while (subBits.Length > 0)
-                    {
-                        numbers.Add(ReadPacket(ref subBits));
-                    }
-                    return ToNumber(numbers, packet.ToString());
+                    return ReadSubPacket(ref bits,packet);
                 }
                 if (mode == "1")
                 {
-                    var length = ReadInt(ref bits, 11);
-                    for (int i = 0; i < length; i++)
-                    {
-                        numbers.Add(ReadPacket(ref bits));
-                    }
-                    return ToNumber(numbers, packet.ToString());
+                    return ReadSubPacket2(ref bits, packet);
                 }
             }
             throw new Exception("");
+
+
+        }
+        private long ReadSubPacket(ref string bits,int packet)
+        {
+            List<long> numbers = new List<long>();
+            int length = ReadInt(ref bits, 15);
+            string subBits = ReadString(ref bits, length);
+            while (subBits.Length > 0)
+            {
+                numbers.Add(ReadPacket(ref subBits));
+            }
+            return ToNumber(numbers, packet.ToString());
+        }
+        private long ReadSubPacket2(ref string bits, int packet)
+        {
+            List<long> numbers = new List<long>();
+            var length = ReadInt(ref bits, 11);
+            for (int i = 0; i < length; i++)
+            {
+                numbers.Add(ReadPacket(ref bits));
+            }
+            return ToNumber(numbers, packet.ToString());
+        }
+        private long ReadLiteral(ref string bits)
+        {
+            string bitsStringLiteral = "";
+            while (true)
+            {
+                bool breakNext = ReadString(ref bits, 1) != "1";
+                string block = ReadString(ref bits, 4);
+                if (block.Length < 4)
+                {
+                    while (block.Length < 4) { block += "0"; }
+                }
+                bitsStringLiteral += block;
+                if (breakNext) break;
+            }
+            return Convert.ToInt64(bitsStringLiteral, 2);
         }
 
         public string ReadString(ref string line, int take)
