@@ -24,6 +24,7 @@ namespace AOC2
             if (!success) new Exception("couldn't parse");
             return (f1(values[0]), f2(values[1]));
         }
+
         public static (R1, R2, R3) Pattern<R1, R2, R3>(this string input, string pattern, Func<string, R1> f1, Func<string, R2> f2, Func<string, R3> f3, string splitString = @"{}")
         {
             var (values, success) = GetValues(input, pattern, splitString, 3);
@@ -126,7 +127,14 @@ namespace AOC2
             return regexString;
         }
 
-
+        public static string FromType<T>() {
+            Type itemType = typeof(T);
+            if (itemType == typeof(int))
+            {
+                return "[0-9]*";
+            }
+            return @"[\s\S]+";
+        }
 
         public static List<List<string>> ClusterLines(this List<string> lines)
         {
@@ -151,7 +159,7 @@ namespace AOC2
             return List;
         }
 
- 
+
 
         public static string Trim(this string line, int front, int back)
         {

@@ -19,7 +19,7 @@ namespace AOC2
             var testLines = File.ReadAllLines(filenameTest).ToList();
             var inputLines = File.ReadAllLines(filename).ToList();
             Console.WriteLine("---###Test###---");
-           // Main(testLines);
+            Main(testLines);
             Console.WriteLine("---###Input###---");
             Main(inputLines);
         }

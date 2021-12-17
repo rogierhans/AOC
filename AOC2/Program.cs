@@ -13,12 +13,22 @@ namespace AOC2
         [STAThreadAttribute]
         static void Main(string[] args)
         {
+            //var line = File.ReadAllText(@"C:\Users\Rogier\Desktop\JSON.txt");
+            //var xD = line.Pattern("{\"event\":\"2021\",\"owner_id\":\"189709\",\"members\":{{0}}" + "}{\"event\":\"2021\"{1}", x =>x ,x=>x);
+            ////var first = xD.Item1.Pattern("{0}:{{1}}{2}",int.Parse,x=>x,x=>x);
+            //var first = xD.Item1.Pattern("\"{0}\":{{1}},{2}", int.Parse, x => x,x=> x);
+            //Console.WriteLine(first.Item1);
+            //Console.WriteLine(first.Item2);
+            //Console.WriteLine(first.Item3);
+            //return;
+
             while (true)
             {
                 var sw = new Stopwatch();
                 sw.Start();
                 // new Day2018_12();
-                new Day16();
+                //new Day7();
+                new Day17();
                 Console.WriteLine(sw.Elapsed.TotalMilliseconds);
             }
 

@@ -17,25 +17,7 @@ namespace AOC2
         public const string BLOCK = "\U00002588";
         public override void Main(List<string> Lines)
         {
-            Dictionary<string, string> hex2String = new Dictionary<string, string>()
-            {
-                ["0"] = "0000",
-                ["1"] = "0001",
-                ["2"] = "0010",
-                ["3"] = "0011",
-                ["4"] = "0100",
-                ["5"] = "0101",
-                ["6"] = "0110",
-                ["7"] = "0111",
-                ["8"] = "1000",
-                ["9"] = "1001",
-                ["A"] = "1010",
-                ["B"] = "1011",
-                ["C"] = "1100",
-                ["D"] = "1101",
-                ["E"] = "1110",
-                ["F"] = "1111",
-            };
+            Dictionary<string, string> hex2String = new Dictionary<string, string>() { ["0"] = "0000", ["1"] = "0001", ["2"] = "0010", ["3"] = "0011", ["4"] = "0100", ["5"] = "0101", ["6"] = "0110", ["7"] = "0111", ["8"] = "1000", ["9"] = "1001", ["A"] = "1010", ["B"] = "1011", ["C"] = "1100", ["D"] = "1101", ["E"] = "1110", ["F"] = "1111", };
             string startString = Lines.First().List().Select(x => hex2String[x]).ToList().Flat();
             var number = ReadPacket(ref startString);
             Console.WriteLine(number == 180616437720);
@@ -94,12 +76,7 @@ namespace AOC2
             while (true)
             {
                 bool breakNext = ReadString(ref bits, 1) != "1";
-                string block = ReadString(ref bits, 4);
-                if (block.Length < 4)
-                {
-                    while (block.Length < 4) { block += "0"; }
-                }
-                bitsStringLiteral += block;
+                bitsStringLiteral += ReadString(ref bits, 4);
                 if (breakNext) break;
             }
             return Convert.ToInt64(bitsStringLiteral, 2);
