@@ -26,10 +26,6 @@ namespace FishLibrary
             this.right = right;
         }
 
-
-       
-
-
         public override string ToString()
         {
             if (isLeaf)

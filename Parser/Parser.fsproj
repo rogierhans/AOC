@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="HexaParser.fs" />
     <Compile Include="Library1.fs" />
-    <None Include="Script.fsx" />
   </ItemGroup>
 
   <ItemGroup>
