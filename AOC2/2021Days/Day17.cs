@@ -29,7 +29,7 @@ namespace AOC2
            // Points.Print("");
             Console.ReadLine();
         }
-        int best = 0;
+       //int best = 0;
         private int Simulate(int veloX, int veloY, (int, int, int, int) numbers)
         {
             int posX = 0;
@@ -53,6 +53,5 @@ namespace AOC2
             return target ? maxYPos : int.MinValue;
         }
     }
-
 }
 

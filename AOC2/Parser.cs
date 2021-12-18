@@ -65,7 +65,7 @@ namespace AOC2
         {
 
             string GetValue(Match match, int i) { return match.Groups["value" + i].Value; };
-            var regex2 = new Regex(CreateRegex(pattern, splitString, number));
+            var regex2 = new Regex(CreateRegex(pattern, splitString, number), RegexOptions.Singleline);
             var m = regex2.Match(input);
             if (!m.Success) return (new List<string>(), false);
             List<string> Values = new List<string>();
@@ -123,7 +123,8 @@ namespace AOC2
             {
                 regexString = regexString.Replace(variable(i), pattern(i));
             }
-            //  Console.WriteLine(regexString);
+            regexString = "^" + regexString + "$";
+             Console.WriteLine(regexString);
             return regexString;
         }
 

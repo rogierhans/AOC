@@ -26,9 +26,7 @@ namespace AOC2
             {
                 var sw = new Stopwatch();
                 sw.Start();
-                // new Day2018_12();
-                //new Day7();
-                new Day17();
+                new Day18();
                 Console.WriteLine(sw.Elapsed.TotalMilliseconds);
             }
 

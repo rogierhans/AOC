@@ -32,22 +32,6 @@ namespace AOC2
         {
             List<long> scores = new List<long>();
             var score = new Dictionary<string, long> { ["("] = 1, ["["] = 2, ["{"] = 3, ["<"] = 4 };
-            //foreach (var line in Lines)
-            //{
-            //    var reducedLine = line;
-            //    for (int i = 0; i < line.Length; i++)
-            //    {
-            //        reducedLine = reducedLine.Replace("()", "").Replace("{}", "").Replace("[]", "").Replace("<>", "");
-            //    }
-            //    bool isValid = !reducedLine.List().Any(letter => new List<string>() { ")", "}", "]", ">" }.Contains(letter));
-            //    if (isValid)
-            //    {
-            //        scores.Add(reducedLine.List().AsEnumerable().Reverse().Aggregate((long)0, (a, b) => a * 5 + score[b]));
-            //    }
-            //}
-            //scores = scores.OrderBy(x => x).ToList();
-            //Console.WriteLine(scores[scores.Count / 2]);
-            //return;
             List<long> numbers = new List<long>();
             var validCombinations = new List<(string, string)> { ("(", ")"), ("{", "}"), ("[", "]"), ("<", ">") };
 

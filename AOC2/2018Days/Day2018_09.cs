@@ -17,7 +17,7 @@ namespace AOC2
         public const string BLOCK = "\U00002588";
         public override void Main(List<string> Lines)
         {
-           (long players, long points) = Lines.First().Pattern("{0} players; last marble is worth {1} points", long.Parse, long.Parse);
+           (long players, long points) = Lines.First().Pattern("{0} players; last marble is worth {1} points",long.Parse, long.Parse);
 
             points = points * 100;
 

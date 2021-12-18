@@ -127,7 +127,8 @@
     <Compile Include="2018Days\Day2018_10.cs" />
     <Compile Include="2021Days\Day16.cs" />
     <Compile Include="2018Days\Day2018_11.cs" />
-    <Compile Include="Day17.cs" />
+    <Compile Include="2021Days\Day17.cs" />
+    <Compile Include="Day18.cs" />
     <Compile Include="ListExtentions.cs" />
     <Compile Include="GOL.cs" />
     <Compile Include="Grid.cs" />
@@ -156,6 +157,19 @@
     <PackageReference Include="OptimizedPriorityQueue">
       <Version>5.1.0</Version>
     </PackageReference>
+    <PackageReference Include="ParsecSharp">
+      <Version>3.3.2</Version>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FishLibrary\FishLibrary.csproj">
+      <Project>{721a13da-6701-448d-a49e-af6bef241c6e}</Project>
+      <Name>FishLibrary</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Parser\Parser.fsproj">
+      <Project>{cba6b28f-c521-4bda-a25d-a9419c0b277d}</Project>
+      <Name>Parser</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
