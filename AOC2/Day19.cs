@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.IO;
 //using ParsecSharp;
 //using FishLibrary;
 namespace AOC2
@@ -148,7 +147,7 @@ namespace AOC2
                 id = Name.Pattern("--- scanner {0} ---", int.Parse);
                 Coordssystem = Name;
                 Positions = inputLines.FindPatterns("{0},{1},{2}", int.Parse, int.Parse, int.Parse).Select(x => new Position(x.Item1, x.Item2, x.Item3, true)).ToList();
-                SetDistancePerm();
+                SetDistance();
             }
             private void SetPositon(Position newPos, int perm)
             {
@@ -156,7 +155,7 @@ namespace AOC2
                 PositionScanner = newPos;
                 var OGRelativePOS = Positions.Select(x => x.PermOfPos[perm]);
                 Positions = OGRelativePOS.Select(x => Minus(newPos, x)).ToList();
-                SetDistancePerm();
+                SetDistance();
                 Console.WriteLine(Name + "set to" + newPos);
 
             }
@@ -164,10 +163,10 @@ namespace AOC2
 
             public void Machtes(Scanner otherScanner)
             {
-                if (HasPosition &&  !otherScanner.HasPosition && CheckIfMatched(otherScanner))
+                if (HasPosition &&  !otherScanner.HasPosition && TwelveBeaconsTheSame(otherScanner))
                 {
-                    var dict1 = numberToPos(otherScanner.Distances.Where(d => Distances.Any(l => Match(l, d))).Select(x => x.Item5).ToList());
-                    var dict2 = numberToPos(Distances.Where(d => otherScanner.Distances.Any(l => Match(l, d))).Select(x => x.Item5.PermOfPos[0]).ToList());
+                    var dict1 = CreatePostionID(otherScanner.Distances.Where(d =>              Distances.Any(l => Match(l, d))).Select(x => x.Item5).ToList());
+                    var dict2 = CreatePostionID(             Distances.Where(d => otherScanner.Distances.Any(l => Match(l, d))).Select(x => x.Item5.PermOfPos[0]).ToList());
                     var tuple = dict1.Select(kvp => (kvp.Value, dict2[kvp.Key])).ToList();
                     for (int i = 0; i < 48; i++)
                     {
@@ -191,7 +190,7 @@ namespace AOC2
             }
 
             int[] Machted = new int[64];
-            private bool CheckIfMatched(Scanner otherScanner)
+            private bool TwelveBeaconsTheSame(Scanner otherScanner)
             {
                 if (Machted[otherScanner.id] == 1) { return true; }
                 if (Machted[otherScanner.id] == -1) {
@@ -238,11 +237,9 @@ namespace AOC2
             }
 
             List<(long, long, long, Position, Position)> Distances = new List<(long, long, long, Position, Position)>();
-            private void SetDistancePerm()
+            private void SetDistance()
             {
                 Distances = new List<(long, long, long, Position, Position)>();
-
-
                 for (int i = 0; i < Positions.Count; i++)
                 {
                     var pos1 = Positions[i];
@@ -254,11 +251,10 @@ namespace AOC2
                             Distances.Add(pos1.Distance(pos2));
                         }
                     }
-
                 }
 
             }
-            private static Dictionary<long, Position> numberToPos(List<Position> postThatMatch)
+            private static Dictionary<long, Position> CreatePostionID(List<Position> postThatMatch)
             {
                 var posToNumber = new Dictionary<long, Position>();
                 for (int i = 0; i < postThatMatch.Count; i++)
@@ -269,11 +265,9 @@ namespace AOC2
                     {
                         if (i != j)
                         {
-
                             var pos2 = postThatMatch[j];
                             var lel = pos1.Distance(pos2);
                             distanceNumber += pos1.DistanceNumber(pos2);
-
                         }
                     }
                     posToNumber[distanceNumber] = pos1;
@@ -281,30 +275,9 @@ namespace AOC2
                 return posToNumber;
             }
 
-
-            public int numberOfMatches(int matches)
-            {
-                for (int i = 3; i <= 12; i++)
-                {
-                    if ((i * (i - 1)) / 2 == matches) return i;
-                }
-                return 0;
-            }
-
             public override string ToString()
             {
-                return "Scanner:" + Name + "\n";// + String.Join("\n", OGRelativePOS) + "\n";// + String.Join("\n", posToNumber.Select(kvp => kvp.Key + "->" + kvp.Value));
-            }
-            List<(long, long, long)> checkList = File.ReadAllLines(@"C:\Users\Rogier\Dropbox\AOC2\AOC2\InputFiles\2021_19\posValidShit.txt").ToList().FindPatterns("{0},{1},{2}", long.Parse, long.Parse, long.Parse);
-
-            public void CheckValid(Position pos)
-            {
-                bool eq = checkList.Any(element =>
-                {
-                    // Console.WriteLine("{0} {1} {2}", element.Item1 - pos.X, element.Item2 - pos.Y, element.Item3 - pos.Z);
-                    return element.Item1 == pos.X && element.Item2 == pos.Y && element.Item3 == pos.Z;
-                });
-                Console.WriteLine(eq);
+                return "Scanner:" + Name + "\n";
             }
 
         }
