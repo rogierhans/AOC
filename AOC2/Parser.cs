@@ -124,7 +124,7 @@ namespace AOC2
                 regexString = regexString.Replace(variable(i), pattern(i));
             }
             regexString = "^" + regexString + "$";
-             Console.WriteLine(regexString);
+           //  Console.WriteLine(regexString);
             return regexString;
         }
 
@@ -147,7 +147,6 @@ namespace AOC2
 
                 if (line == "")
                 {
-                    Console.WriteLine("adsds");
                     List.Add(currentList);
                     currentList = new List<string>();
                 }

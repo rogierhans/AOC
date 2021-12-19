@@ -31,20 +31,18 @@ namespace AOC2
                 }
             }
             Console.WriteLine(max);
-            Console.ReadLine();
+            //Console.ReadLine();
         }
         public void PutFishInTheOven(Fish fish)
         {
             bool p = true;
+            SetDepth(fish, 0);
             while (p)
             {
-                SetDepth(fish, 0);
-                p = false;
-                p |= Explode(fish);
-                if (!p)
-                {
-                    p |= LeftMostSplit(fish);
-                }
+                p = false; 
+                while (Explode(fish)) ;
+
+                p |= LeftMostSplit(fish);
             }
 
         }
@@ -67,7 +65,9 @@ namespace AOC2
                     int rightNumber = (int)Math.Ceiling(halved);
                     fish.isLeaf = false;
                     fish.left = new Fish(leftNumber);
+                    fish.left.depth = fish.depth + 1;
                     fish.right = new Fish(rightNumber);
+                    fish.right.depth = fish.depth + 1;
                     return true;
                 }
                 else return false;
