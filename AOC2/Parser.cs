@@ -79,25 +79,25 @@ namespace AOC2
         public static List<R1> FindPatterns<R1>(this List<string> lines, string pattern, Func<string, R1> f1, string splitString = @"{}")
         {
             var successfulParsed = lines.Select(line => line.TryPattern(pattern, f1, splitString)).Where(x => x.Item2);
-            Console.WriteLine(successfulParsed.Count() + " out of " + lines.Count + " \"" + pattern + "\"");
+            //Console.WriteLine(successfulParsed.Count() + " out of " + lines.Count + " \"" + pattern + "\"");
             return successfulParsed.Select(x => x.Item1).ToList();
         }
         public static List<(R1, R2)> FindPatterns<R1, R2>(this List<string> lines, string pattern, Func<string, R1> f1, Func<string, R2> f2, string splitString = @"{}")
         {
             var successfulParsed = lines.Select(line => line.TryPattern(pattern, f1, f2, splitString)).Where(x => x.Item3);
-            Console.WriteLine(successfulParsed.Count() + " out of " + lines.Count + " \"" + pattern + "\"");
+            //Console.WriteLine(successfulParsed.Count() + " out of " + lines.Count + " \"" + pattern + "\"");
             return successfulParsed.Select(x => (x.Item1, x.Item2)).ToList();
         }
         public static List<(R1, R2, R3)> FindPatterns<R1, R2, R3>(this List<string> lines, string pattern, Func<string, R1> f1, Func<string, R2> f2, Func<string, R3> f3, string splitString = @"{}")
         {
             var successfulParsed = lines.Select(line => line.TryPattern(pattern, f1, f2, f3, splitString)).Where(x => x.Item4);
-            Console.WriteLine(successfulParsed.Count() + " out of " + lines.Count + " \"" + pattern + "\"");
+            //Console.WriteLine(successfulParsed.Count() + " out of " + lines.Count + " \"" + pattern + "\"");
             return successfulParsed.Select(x => (x.Item1, x.Item2, x.Item3)).ToList();
         }
         public static List<(R1, R2, R3, R4)> FindPatterns<R1, R2, R3, R4>(this List<string> lines, string pattern, Func<string, R1> f1, Func<string, R2> f2, Func<string, R3> f3, Func<string, R4> f4, string splitString = @"{}")
         {
             var successfulParsed = lines.Select(line => line.TryPattern(pattern, f1, f2, f3, f4, splitString)).Where(x => x.Item5);
-            Console.WriteLine(successfulParsed.Count() + " out of " + lines.Count + " \"" + pattern + "\"");
+            //Console.WriteLine(successfulParsed.Count() + " out of " + lines.Count + " \"" + pattern + "\"");
             return successfulParsed.Select(x => (x.Item1, x.Item2, x.Item3, x.Item4)).ToList();
         }
         //public static List<R1> FindPatterns<R1>(List<string> lines, string pattern, Func<string, R1> f1, string splitString = @"{}")

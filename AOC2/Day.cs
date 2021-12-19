@@ -21,7 +21,7 @@ namespace AOC2
             Console.WriteLine("---###Test###---");
             Main(testLines);
             Console.WriteLine("---###Input###---");
-            Main(inputLines);
+           Main(inputLines);
         }
 
         public virtual void Main(List<string> inputLines)
