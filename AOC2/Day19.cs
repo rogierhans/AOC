@@ -20,55 +20,18 @@ namespace AOC2
 
         public override void Main(List<string> Lines)
         {
-            //Lines.Print();
             var scaners = Lines.ClusterLines().Select(clines => new Scanner(clines)).ToList();
             List<(long, long, long, Position, Position)> AllDistances = new List<(long, long, long, Position, Position)>();
-            //scaners.ForEach(s => AllDistances.AddRange(s.DistanceList));
-            //// scaners.Print("\n");
-            //// 
-            //// var mem = new Mem();
-            //// var mem2 = new Mem();
-            //// Dictionary<(long, long, long, Position, Position), int> UniekeDistances = new Dictionary<(long, long, long, Position, Position), int>();
-            //foreach (var d in AllDistances)
-            //{
-            //    //mem.Add(d.Item1, d.Item2, d.Item3, 1);
-            //    //   if (!UniekeDistances.ContainsKey(d)) UniekeDistances[d] = 0;
-            //    // UniekeDistances[d]++;
-            //}
-            // var total = scaners.Sum(x => x.OGRelativePOS.Count);
-            //// Console.WriteLine(UniekeDistances.Where(kvp => kvp.Value== 1).Count());
-            //foreach (var kvp in mem.Dict)
-            //{
-            //    foreach (var kvp2 in kvp.Value)
-            //    {
-            //        foreach (var kvp3 in kvp2.Value)
-            //        {
-            //            if (kvp3.Value == 2)
-            //            {
-            //                total--;
-            //            }
-            //            Console.WriteLine("({0},{1},{2}) = {3}", kvp.Key, kvp2.Key, kvp3.Key, kvp3.Value);
-            //        }
-            //    }
-
-            //}
-
             scaners[0].PositionScanner = new Position(0, 0, 0, false);
             scaners[0].HasPosition = true;
-            // Console.WriteLine(total);
-            //Console.ReadLine();
-            int loopCounteer = 0;
             while (scaners.Where(x => x.HasPosition).Count() < scaners.Count())
             {
-                Console.WriteLine(loopCounteer++);
                 for (int i = 0; i < scaners.Count; i++)
                 {
                     for (int j = 0; j < scaners.Count; j++)
                     {
                         if (i != j)
                             scaners[i].Machtes(scaners[j]);
-                        // Console.WriteLine(total);
-                        //Console.ReadLine();
                     }
                 }
             }
@@ -88,10 +51,6 @@ namespace AOC2
                 }
             }
             Console.WriteLine(max);
-            //Console.ReadLine();
-            //Console.WriteLine(total + scaners.Sum(x => x.count));
-            //scaners.Print("\n");
-
         }
         public class Position
         {
@@ -176,16 +135,17 @@ namespace AOC2
 
         public class Scanner
         {
+            public int id = 0;
             public string Name = "";
             public string Coordssystem;
             public Position PositionScanner;
             List<Position> Positions = new List<Position>();
 
-            List<string> oldLines;
             public Scanner(List<string> inputLines)
             {
-                oldLines = inputLines;
+  
                 Name = inputLines[0];
+                id = Name.Pattern("--- scanner {0} ---", int.Parse);
                 Coordssystem = Name;
                 Positions = inputLines.FindPatterns("{0},{1},{2}", int.Parse, int.Parse, int.Parse).Select(x => new Position(x.Item1, x.Item2, x.Item3, true)).ToList();
                 SetDistancePerm();
@@ -204,47 +164,44 @@ namespace AOC2
 
             public void Machtes(Scanner otherScanner)
             {
-                bool mathedCanidite = CheckIfMatched(otherScanner);
-                if (HasPosition && mathedCanidite && !otherScanner.HasPosition)
+                if (HasPosition &&  !otherScanner.HasPosition && CheckIfMatched(otherScanner))
                 {
-                    var bit2 = otherScanner.Distances.Where(d => Distances.Any(l => Match(l, d)));
+                    var dict1 = numberToPos(otherScanner.Distances.Where(d => Distances.Any(l => Match(l, d))).Select(x => x.Item5).ToList());
                     var dict2 = numberToPos(Distances.Where(d => otherScanner.Distances.Any(l => Match(l, d))).Select(x => x.Item5.PermOfPos[0]).ToList());
-
+                    var tuple = dict1.Select(kvp => (kvp.Value, dict2[kvp.Key])).ToList();
                     for (int i = 0; i < 48; i++)
                     {
-                        var bit = bit2.Select(x => x.Item5.PermOfPos[i]).ToList();
-                        var dict1 = numberToPos(bit);
-                        Dictionary<Position, Position> tuples = new Dictionary<Position, Position>();
-                        foreach (var kvp in dict1)
-                        {
-                            tuples[kvp.Value] = dict2[kvp.Key];
-                        }
-                        var minues = tuples.Select(kvp => Minus(kvp.Key, kvp.Value)).ToList();
+                        var first = Minus(tuple[0].Item1.PermOfPos[i], tuple[0].Item2);
                         bool p = true;
-                        for (int j = 1; j < minues.Count; j++)
+                        int j = 1;
+                        while (p && j < 12)
                         {
-                            p &= minues[j - 1].Equal(minues[j]);
+                            var other = Minus(tuple[j].Item1.PermOfPos[i], tuple[j].Item2);
+                            p &= first.Equal(other);
+                            first = Minus(tuple[j].Item1.PermOfPos[i], tuple[j].Item2);
+                            j++;
                         }
                         if (p)
                         {
-                            otherScanner.SetPositon(minues.First(), i);
+                            otherScanner.SetPositon(first, i);
                             return;
                         }
                     }
                 }
             }
 
+            int[] Machted = new int[64];
             private bool CheckIfMatched(Scanner otherScanner)
             {
+                if (Machted[otherScanner.id] == 1) { return true; }
+                if (Machted[otherScanner.id] == -1) {
+                    return false; }
                 var matcheDistance = otherScanner.Distances.Where(d => Distances.Any(l => Match(l, d)));
-                var posFromDistThatMatch = matcheDistance.Select(x => x.Item4).ToList();
+                var posFromDistThatMatch = matcheDistance.Select(x => x.Item4);
 
-                HashSet<Position> beamersThatMatch = new HashSet<Position>();
-                foreach (var pos in posFromDistThatMatch)
-                {
-                    beamersThatMatch.Add(pos);
-                }
-                var mathedCanidite = beamersThatMatch.Count() == 12;
+                var mathedCanidite = posFromDistThatMatch.Count() == 132;
+
+                Machted[otherScanner.id] = mathedCanidite ? 1 : -1;
                 return mathedCanidite;
             }
 

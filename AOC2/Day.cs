@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-
+using System.Diagnostics;
 namespace AOC2
 {
     class Day
@@ -18,8 +18,12 @@ namespace AOC2
             string filenameTest = folder + "test.txt";
             var testLines = File.ReadAllLines(filenameTest).ToList();
             var inputLines = File.ReadAllLines(filename).ToList();
+            var sw = new Stopwatch();
+            sw.Start(); 
             Console.WriteLine("---###Test###---");
+
             Main(testLines);
+            Console.WriteLine(sw.Elapsed.TotalMilliseconds);
             Console.WriteLine("---###Input###---");
            Main(inputLines);
         }
