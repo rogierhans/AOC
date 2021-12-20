@@ -6,31 +6,49 @@ using System.Threading.Tasks;
 
 namespace AOC2
 {
-    class Mem
+    class Mem<Argument, Result>
     {
 
+        private Dictionary<Argument, Dictionary<Argument, Result>> memory2 = new Dictionary<Argument, Dictionary<Argument, Result>>();
+        private Dictionary<Argument, Dictionary<Argument, Dictionary<Argument, Result>>> memory3 = new Dictionary<Argument, Dictionary<Argument, Dictionary<Argument, Result>>>();
 
-        public Dictionary<long, Dictionary<long, Dictionary<long, int>>> Dict = new Dictionary<long, Dictionary<long, Dictionary<long, int>>>();
-        public void Add(long first, long second, long third, int value)
+
+        private Dictionary<Argument, Result> memory1 = new Dictionary<Argument, Result>();
+        public Result F(Func<Argument, Result> func, Argument first)
         {
-            if (!Dict.ContainsKey(first))
+            if (!memory1.ContainsKey(first))
             {
-                Dict[first] = new Dictionary<long, Dictionary<long, int>>();
+                memory1[first] = func(first);
             }
-            if (!Dict[first].ContainsKey(second))
-            {
-                Dict[first][second] = new Dictionary<long, int>();
-            }
-            if (!Dict[first][second].ContainsKey(third))
-            {
-                Dict[first][second][third] = 0;
-            }
-            Dict[first][second][third] += value;
+            return memory1[first];
         }
-
-        public int GetValue(long first, long second, long third)
+        public Result F(Func<Argument, Argument, Result> func, Argument first, Argument second)
         {
-            return Dict[first][second][third];
+            if (!memory2.ContainsKey(first))
+            {
+                memory2[first] = new Dictionary<Argument, Result>();
+            }
+            if (!memory2[first].ContainsKey(second))
+            {
+                memory2[first][second] = func(first, second);
+            }
+            return memory2[first][second];
+        }
+        public Result F(Func<Argument, Argument, Argument, Result> func, Argument first, Argument second, Argument third)
+        {
+            if (!memory3.ContainsKey(first))
+            {
+                memory3[first] = new Dictionary<Argument, Dictionary<Argument, Result>>();
+            }
+            if (!memory3[first].ContainsKey(second))
+            {
+                memory3[first][second] = new Dictionary<Argument, Result>();
+            }
+            if (!memory3[first][second].ContainsKey(third))
+            {
+                memory3[first][second][third] = func(first, second, third);
+            }
+            return memory3[first][second][third];
         }
     }
 }

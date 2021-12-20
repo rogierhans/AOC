@@ -90,6 +90,7 @@ namespace AOC2
             public List<Position> PermOfPos = new List<Position>();
             public void FindPerms()
             {
+
                 foreach (bool negativeX in new List<bool> { true, false })
                 {
                     foreach (bool negativeY in new List<bool> { true, false })
@@ -165,8 +166,10 @@ namespace AOC2
             {
                 if (HasPosition &&  !otherScanner.HasPosition && TwelveBeaconsTheSame(otherScanner))
                 {
-                    var dict1 = CreatePostionID(otherScanner.Distances.Where(d =>              Distances.Any(l => Match(l, d))).Select(x => x.Item5).ToList());
-                    var dict2 = CreatePostionID(             Distances.Where(d => otherScanner.Distances.Any(l => Match(l, d))).Select(x => x.Item5.PermOfPos[0]).ToList());
+                    var list1 = otherScanner.Distances.Where(d => Distances.Any(l => Match(l, d))).Select(x => x.Item5).ToList();
+                    var list2 = Distances.Where(d => otherScanner.Distances.Any(l => Match(l, d))).Select(x => x.Item5.PermOfPos[0]).ToList();
+                    var dict1 = CreatePostionID(list1);
+                    var dict2 = CreatePostionID(list2);
                     var tuple = dict1.Select(kvp => (kvp.Value, dict2[kvp.Key])).ToList();
                     for (int i = 0; i < 48; i++)
                     {
@@ -279,7 +282,6 @@ namespace AOC2
             {
                 return "Scanner:" + Name + "\n";
             }
-
         }
 
     }

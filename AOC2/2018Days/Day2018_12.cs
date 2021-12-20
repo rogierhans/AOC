@@ -94,41 +94,6 @@ namespace AOC2
 
 
 
-        class DictList2D<T>
-        {
-            Dictionary<int, Dictionary<int, T>> dict = new Dictionary<int, Dictionary<int, T>>();
-            private readonly T DefaultValue;
-
-            public DictList2D(T defaultValue)
-            {
-                DefaultValue = defaultValue;
-            }
-
-            public T Get(int i, int j)
-            {
-                if (dict.ContainsKey(i) && dict[i].ContainsKey(j)) return dict[i][j];
-                else return DefaultValue;
-            }
-            public void Add(int i, int j, T element)
-            {
-                if (dict.ContainsKey(i)) dict[i] = new Dictionary<int, T>();
-                dict[i][j] = element;
-            }
-
-            public List<(T, int, int)> GetElements()
-            {
-                var list = new List<(T, int, int)>();
-                foreach (var kvp in dict)
-                {
-                    int index1 = kvp.Key;
-                    foreach (var kvp2 in kvp.Value)
-                    {
-                        int index2 = kvp2.Key;
-                        list.Add((kvp2.Value, index1, index2));
-                    }
-                }
-                return list;
-            }
-        }
+      
     }
 }
