@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 //using ParsecSharp;
 //using FishLibrary;
 namespace AOC2
@@ -17,7 +18,48 @@ namespace AOC2
         }
         public const string BLOCK = "\U00002588";
 
+        int height = 250;
+        int width = 250;
         public override void Main(List<string> Lines)
+        {
+            //Main2(Lines);
+            //Lines.Print("\n");
+            var split = Lines.ClusterLines();
+            var map = split[0].First().List().Select(x => x == "#" ? 1 : 0).ToList();
+            //map.Print();
+            var second = split[1].Parse2D(x => x == "#" ? 1 : 0);
+            int[,] array = new int[height, width];
+            for (int i = 0; i < second.Count; i++)
+            {
+                for (int j = 0; j < second[0].Count; j++)
+                {
+                    array[i + 75, j + 75] = second[i][j];
+                }
+            }
+
+            List<int> Row = new List<int>();
+            for (int i = 0; i < height; i++)
+            {
+                Row.Add(i);
+            }
+            for (int k = 0; k < 50; k++)
+            {
+                int[,] newArrray = new int[height, width];
+                Parallel.ForEach(Row, x => SetRow(map, array, newArrray, x));
+                array = newArrray;
+            }
+            Console.WriteLine(array.ToLists().GridSum(x => x));
+        }
+
+        private void SetRow(List<int> map, int[,] array, int[,] newArrray, int i)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                newArrray[i, j] = GetNextClamp(map, i, j, array);
+            }
+        }
+
+        public void Main2(List<string> Lines)
         {
             //Lines.Print("\n");
             var split = Lines.ClusterLines();
@@ -35,35 +77,58 @@ namespace AOC2
                 }
             }
             PrintGrid(outputGrid);
+            var sumGrid = new DictList2D<int>(0);
             for (int k = 0; k < 50; k++)
             {
+                PrintGrid(outputGrid);
+                Console.ReadLine();
                 var defaultValue = k % 2 == 0 ? map.First() : map.Last();
                 var newoutputGrid = new DictList2D<int>(defaultValue);
                 //var elements = outputGrid.GetElements();
-                var minX = outputGrid.minX-2;
-                var maxX = outputGrid.maxX+2;
+                var minX = outputGrid.minX - 2;
+                var maxX = outputGrid.maxX + 2;
                 var minY = outputGrid.minY - 2;
-                var maxY = outputGrid.maxY+2;
-                var array =  outputGrid.CreateArray(minX-2, maxX+2 , minY - 2, maxY +2);
-
-                var xOffset = 0 - minX+2;
-                var yOffset = 0 - minY+2;
+                var maxY = outputGrid.maxY + 2;
+                var array = outputGrid.CreateArray(minX - 2, maxX + 2, minY - 2, maxY + 2);
+                Console.WriteLine("{0} {1} {2} {3}", minX, minY, maxX, maxY);
+                var xOffset = 0 - minX + 2;
+                var yOffset = 0 - minY + 2;
                 for (int i = minX; i < maxX; i++)
                 {
                     for (int j = minY; j < maxY; j++)
                     {
-                        int next = GetNext(map, outputGrid, i, j,  array,xOffset, yOffset);
+                        int next = GetNext(map, i, j, array, xOffset, yOffset);
                         if (next != defaultValue)
                             newoutputGrid.Add(i, j, next);
                     }
                 }
+
 
                 outputGrid = newoutputGrid;
             }
             Console.WriteLine(outputGrid.GetElements().Where(x => x.Item1 == 1).Count());
         }
 
-        private int GetNext(List<int> map, DictList2D<int> outputGrid, int i, int j, int[,] array, int xOffset, int yOffset)
+        private int GetNextClamp(List<int> map, int i, int j, int[,] array)
+        {
+
+            List<int> bitString = new List<int>();
+            int number = 0;
+            byte k = 8;
+            for (int x = -1; x <= 1; x++)
+            {
+                for (int y = -1; y <= 1; y++)
+                {
+                     number |= array[Math.Max(0, Math.Min(i + x,height-1)) , Math.Max(0, Math.Min(y+j, width - 1))] << k;
+                   // number |= array[55, 33] << k;
+                    k--;
+                }
+            }
+            var next = map[number];
+            return next;
+        }
+
+        private int GetNext(List<int> map, int i, int j, int[,] array, int xOffset, int yOffset)
         {
             List<int> bitString = new List<int>();
             int number = 0;
@@ -131,10 +196,10 @@ namespace AOC2
             {
 
                 minX = Math.Min(i, minX);
-                minY=  Math.Min(j, minY);
+                minY = Math.Min(j, minY);
 
-                maxX=  Math.Max(i, maxX);
-                maxY =Math.Max(j, maxY);
+                maxX = Math.Max(i, maxX);
+                maxY = Math.Max(j, maxY);
                 // Console.WriteLine(i + " " +j);
                 if (!dict.ContainsKey(i)) dict[i] = new Dictionary<int, T>();
                 dict[i][j] = element;
@@ -168,7 +233,8 @@ namespace AOC2
                         array[i, j] = DefaultValue;
                     }
                 }
-                foreach (var (element, i, j) in GetElements()) {
+                foreach (var (element, i, j) in GetElements())
+                {
                     array[i - minX, j - minY] = element;
                 }
 
