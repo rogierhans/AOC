@@ -35,58 +35,51 @@ namespace AOC2
                 }
             }
             PrintGrid(outputGrid);
-          //  Console.ReadLine();
             for (int k = 0; k < 50; k++)
             {
-                PrintGrid(outputGrid);
                 var defaultValue = k % 2 == 0 ? map.First() : map.Last();
                 var newoutputGrid = new DictList2D<int>(defaultValue);
-                //            var elements = grid.GetElements();
-                //var minX = elements.Min(x => x.Item2) - 10;
-                //var maxX = elements.Max(x => x.Item2) + 10;
-                //var minY = elements.Min(x => x.Item3) - 10;
-                //var maxY = elements.Max(x => x.Item3) + 10;
-                foreach (var (element, potI, potJ) in outputGrid.GetElements())
+                //var elements = outputGrid.GetElements();
+                var minX = outputGrid.minX-2;
+                var maxX = outputGrid.maxX+2;
+                var minY = outputGrid.minY - 2;
+                var maxY = outputGrid.maxY+2;
+                var array =  outputGrid.CreateArray(minX-2, maxX+2 , minY - 2, maxY +2);
+
+                var xOffset = 0 - minX+2;
+                var yOffset = 0 - minY+2;
+                for (int i = minX; i < maxX; i++)
                 {
-
-                    for (int a = -1; a <= 1; a++)
+                    for (int j = minY; j < maxY; j++)
                     {
-                        for (int b = -1; b <= 1; b++)
-                        {
-                            int i = potI + a;
-                            int j = potJ + b;
-
-                            int next = GetNext(map, outputGrid, i, j);
-                            if (next != defaultValue)
-                                newoutputGrid.Add(i, j, next);
-                        }
+                        int next = GetNext(map, outputGrid, i, j,  array,xOffset, yOffset);
+                        if (next != defaultValue)
+                            newoutputGrid.Add(i, j, next);
                     }
                 }
 
-
                 outputGrid = newoutputGrid;
-                //PrintGrid(outputGrid);
             }
             Console.WriteLine(outputGrid.GetElements().Where(x => x.Item1 == 1).Count());
-            Console.ReadLine();
         }
 
-        private int GetNext(List<int> map, DictList2D<int> outputGrid, int i, int j)
+        private int GetNext(List<int> map, DictList2D<int> outputGrid, int i, int j, int[,] array, int xOffset, int yOffset)
         {
             List<int> bitString = new List<int>();
             int number = 0;
-            int k = 8;
+            byte k = 8;
             for (int x = -1; x <= 1; x++)
             {
                 for (int y = -1; y <= 1; y++)
                 {
-                    number += outputGrid.Get(i + x, y + j) << k;
+                    number |= array[i + x + xOffset, y + j + yOffset] << k;
                     k--;
                 }
             }
             var next = map[number];
             return next;
         }
+
 
         private void PrintGrid(DictList2D<int> grid)
         {
@@ -129,8 +122,19 @@ namespace AOC2
                 }
                 else return DefaultValue;
             }
+
+            public int minX = 0;
+            public int maxX = 0;
+            public int minY = 0;
+            public int maxY = 0;
             public void Add(int i, int j, T element)
             {
+
+                minX = Math.Min(i, minX);
+                minY=  Math.Min(j, minY);
+
+                maxX=  Math.Max(i, maxX);
+                maxY =Math.Max(j, maxY);
                 // Console.WriteLine(i + " " +j);
                 if (!dict.ContainsKey(i)) dict[i] = new Dictionary<int, T>();
                 dict[i][j] = element;
@@ -149,6 +153,27 @@ namespace AOC2
                     }
                 }
                 return list;
+            }
+
+            public T[,] CreateArray(int minX, int maxX, int minY, int maxY)
+            {
+                int height = maxX - minX;
+                int width = maxY - minY;
+                T[,] array = new T[height, width];
+
+                for (int i = 0; i < height; i++)
+                {
+                    for (int j = 0; j < width; j++)
+                    {
+                        array[i, j] = DefaultValue;
+                    }
+                }
+                foreach (var (element, i, j) in GetElements()) {
+                    array[i - minX, j - minY] = element;
+                }
+
+
+                return array;
             }
         }
     }
